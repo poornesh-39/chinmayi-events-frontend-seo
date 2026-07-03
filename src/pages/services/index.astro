@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCards from '../../components/ServiceCards.astro';
+import FAQ from '../../components/FAQ.astro';
+import { services, site, siteUrl, whatsappHref } from '../../data/site.js';
+
+const serviceListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: services.map((service, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'Service',
+      name: service.title,
+      description: service.description,
+      provider: {
+        '@type': 'LocalBusiness',
+        name: site.name
+      },
+      areaServed: 'Chikkamagaluru',
+      url: new URL(`/services/${service.slug}/`, siteUrl).toString()
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title="Event Decoration Services in Chikkamagaluru | Chinmayi Events"
+  description="Explore Chinmayi Events services for wedding decoration, reception stages, birthday decor, engagement decor, flower themes, shamiyana, chair and carpet setup in Chikkamagaluru."
+  canonical="/services/"
+  jsonLd={serviceListSchema}
+>
+  <section class="interior-hero" style="--page-hero-image: url('/images/chikkamagaluru-wedding-stage-decoration.jpg')">
+    <div class="container">
+      <p class="eyebrow">Services</p>
+      <h1>Event decoration services for every celebration.</h1>
+      <p class="lead">
+        Choose a complete event setup or a focused decoration service for your
+        wedding, reception, birthday, engagement or home celebration in
+        Chikkamagaluru.
+      </p>
+      <div class="hero-kicker-row">
+        <span>Wedding decor</span>
+        <span>Reception stages</span>
+        <span>Birthday themes</span>
+        <span>Shamiyana setup</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section services-intro">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">What we do</p>
+        <h2 class="section-title">From one backdrop to a complete venue setup.</h2>
+        <p class="lead">
+          Every event is handled around the venue, guest movement, rituals,
+          photography and family preferences. Pick a service below, then share
+          your date and location for a quote.
+        </p>
+      </div>
+      <div class="service-note luxe-panel">
+        <strong>Need guidance?</strong>
+        <p>Send a few reference photos on WhatsApp. We can suggest the right service mix for your budget and venue.</p>
+        <a class="button button-dark" href={whatsappHref()} target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="container">
+      <ServiceCards />
+    </div>
+  </section>
+
+  <section class="section dark-band process-band">
+    <div class="container centered">
+      <p class="eyebrow">Booking flow</p>
+      <h2 class="section-title">Simple planning, polished execution.</h2>
+      <div class="process-mini">
+        <span>Share event details</span>
+        <span>Finalize theme</span>
+        <span>Confirm setup</span>
+        <span>Celebrate</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Questions</p>
+        <h2 class="section-title">Planning your event?</h2>
+        <p class="lead">These answers help before you request a quote.</p>
+      </div>
+      <FAQ />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .service-note {
+    display: grid;
+    gap: 12px;
+    padding: 26px;
+  }
+
+  .service-note strong {
+    color: var(--maroon-dark);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.7rem;
+  }
+
+  .service-note p {
+    color: var(--muted);
+  }
+
+  .process-band {
+    background:
+      linear-gradient(rgba(8, 7, 6, 0.88), rgba(8, 7, 6, 0.9)),
+      url('/images/chikkamagaluru-gallery-wedding-mandap-2.jpeg') center/cover;
+  }
+
+  .process-mini {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .process-mini span {
+    border: 1px solid rgba(217, 173, 82, 0.32);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff8ec;
+    padding: 18px;
+    font-weight: 900;
+  }
+
+  @media (max-width: 760px) {
+    .process-mini {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+

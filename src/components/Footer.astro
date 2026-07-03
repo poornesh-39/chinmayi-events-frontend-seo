@@ -1,0 +1,164 @@
+---
+import { site, services, whatsappHref, gmailHref } from '../data/site.js';
+---
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="footer-brand" href="/">
+        <img src={site.logo} alt="Chinmayi Events logo" width="58" height="58" />
+        <span>Chinmayi Events</span>
+      </a>
+      <p>Turning your dreams into beautiful celebrations across Karnataka.</p>
+      <div class="socials">
+        <a href={site.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1"/></svg>
+        </a>
+        <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 19.2 6.4 15A7.2 7.2 0 1 1 9 17.6l-3.8 1.6Z"/><path d="M9.3 8.7c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.5c.1.2.1.4 0 .6l-.4.5c-.1.1-.2.3 0 .5.5.8 1.2 1.5 2.2 2 .2.1.4.1.5-.1l.6-.7c.2-.2.4-.2.6-.1l1.5.7c.3.1.4.3.4.6 0 .7-.5 1.4-1.1 1.6-.6.2-2.5.2-4.5-1.2-2.3-1.6-3.4-3.7-3.5-4.8-.1-.6.2-1.1.6-1.5Z"/></svg>
+        </a>
+        <a href={gmailHref()} target="_blank" rel="noopener noreferrer" aria-label="Gmail">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="m4.5 7 7.5 6 7.5-6"/><path d="M7 18V9.5"/><path d="M17 18V9.5"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <a href="/">Home</a>
+      <a href="/about/">About Us</a>
+      <a href="/services/">Services</a>
+      <a href="/gallery/">Gallery</a>
+      <a href="/contact/">Contact Us</a>
+    </div>
+    <div>
+      <h3>Services</h3>
+      {services.slice(0, 6).map((service) => (
+        <a href={`/services/${service.slug}/`}>{service.shortTitle}</a>
+      ))}
+    </div>
+    <div>
+      <h3>Contact Us</h3>
+      <span>Contact person: {site.contactPerson}</span>
+      <p>{site.address}</p>
+      <a href={`tel:${site.phonePrimary}`}>{site.phonePrimaryLabel}</a>
+      <a href={gmailHref()} target="_blank" rel="noopener noreferrer">{site.email}</a>
+      <span>Mon - Sun: 9:00 AM - 8:00 PM</span>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© {new Date().getFullYear()} Chinmayi Events. All rights reserved.</span>
+    <span>Designed with love for your special moments</span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #050504;
+    color: #fff7ec;
+    padding: 58px 0 24px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 1fr 1.15fr;
+    gap: 42px;
+  }
+
+  .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    color: var(--gold);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.6rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .footer-brand img {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  h3 {
+    color: var(--gold);
+    margin-bottom: 18px;
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  p,
+  span,
+  a {
+    color: rgba(255, 247, 236, 0.76);
+  }
+
+  .footer-grid a,
+  .footer-grid span {
+    display: block;
+    margin: 8px 0;
+    font-size: 0.92rem;
+  }
+
+  .socials {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .socials a {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(217, 173, 82, 0.65);
+    border-radius: 50%;
+    color: var(--gold);
+    transition: background 160ms ease, transform 160ms ease;
+  }
+
+  .socials a:hover {
+    background: rgba(217, 173, 82, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .socials svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: 38px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.84rem;
+  }
+
+  @media (max-width: 860px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

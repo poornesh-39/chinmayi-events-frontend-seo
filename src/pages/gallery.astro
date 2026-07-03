@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GalleryPreview from '../components/GalleryPreview.astro';
+import LiveGallery from '../components/LiveGallery.jsx';
+import IslandStyles from '../components/IslandStyles.astro';
+import { site, siteUrl, whatsappHref } from '../data/site.js';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Chinmayi Events Gallery',
+  description: 'Wedding, reception, birthday, engagement and theme decoration gallery from Chinmayi Events in Chikkamagaluru.',
+  url: new URL('/gallery/', siteUrl).toString(),
+  isPartOf: {
+    '@type': 'WebSite',
+    name: site.name,
+    url: siteUrl
+  }
+};
+---
+
+<BaseLayout
+  title="Event Decoration Gallery in Chikkamagaluru | Chinmayi Events"
+  description="View Chinmayi Events wedding decoration, reception stage, birthday decor, flower theme and shamiyana setup work in Chikkamagaluru."
+  canonical="/gallery/"
+  jsonLd={schema}
+>
+  <IslandStyles />
+  <section class="interior-hero" style="--page-hero-image: url('/images/chikkamagaluru-gallery-night-stage-10.jpeg')">
+    <div class="container">
+      <p class="eyebrow">Gallery</p>
+      <h1>Decoration work from real celebrations.</h1>
+      <p class="lead">
+        Browse featured Chinmayi Events decor and live gallery categories from
+        recent uploads.
+      </p>
+      <div class="hero-kicker-row">
+        <span>Wedding stages</span>
+        <span>Outdoor mandaps</span>
+        <span>Floral themes</span>
+        <span>Recent uploads</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gallery-intro">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Our work</p>
+        <h2 class="section-title">A curated look at our decoration style.</h2>
+        <p class="lead">
+          These highlights show how Chinmayi Events uses lighting, flowers,
+          fabric, structure and venue planning to create celebration-ready spaces.
+        </p>
+      </div>
+      <div class="gallery-cta luxe-panel">
+        <strong>Like a setup?</strong>
+        <p>Send the image reference on WhatsApp and we will guide the design, materials and pricing for your venue.</p>
+        <a class="button button-dark" href={whatsappHref()} target="_blank" rel="noopener noreferrer">Discuss This Style</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="container">
+      <GalleryPreview />
+    </div>
+  </section>
+
+  <section class="section live-gallery-section">
+    <div class="container">
+      <p class="eyebrow">Live gallery</p>
+      <h2 class="section-title">Latest Cloudinary gallery uploads</h2>
+      <LiveGallery client:load />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gallery-cta {
+    display: grid;
+    gap: 12px;
+    padding: 26px;
+  }
+
+  .gallery-cta strong {
+    color: var(--maroon-dark);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.7rem;
+  }
+
+  .gallery-cta p {
+    color: var(--muted);
+  }
+
+  .live-gallery-section {
+    background: linear-gradient(180deg, #fffdf8, #fbf7ef);
+  }
+</style>

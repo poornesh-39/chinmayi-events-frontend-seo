@@ -1,0 +1,42 @@
+---
+import { site, whatsappHref } from '../data/site.js';
+---
+
+<div class="sticky-actions" aria-label="Quick contact actions">
+  <a href={`tel:${site.phonePrimary}`}>Call</a>
+  <a href={whatsappHref()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  <a href="/contact/">Quote</a>
+</div>
+
+<style>
+  .sticky-actions {
+    display: none;
+  }
+
+  @media (max-width: 620px) {
+    .sticky-actions {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #fffdf8;
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -10px 28px rgba(38, 23, 15, 0.1);
+    }
+
+    .sticky-actions a {
+      padding: 14px 8px;
+      text-align: center;
+      font-weight: 850;
+      color: var(--maroon-dark);
+    }
+
+    .sticky-actions a:nth-child(2) {
+      background: #128c4a;
+      color: #fff;
+    }
+  }
+</style>

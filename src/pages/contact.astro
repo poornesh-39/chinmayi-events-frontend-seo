@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.jsx';
+import IslandStyles from '../components/IslandStyles.astro';
+import { site, whatsappHref, gmailHref } from '../data/site.js';
+---
+
+<BaseLayout
+  title="Contact Chinmayi Events | Event Decoration in Chikkamagaluru"
+  description="Contact Chinmayi Events for wedding decoration, reception stage, birthday decor, engagement decor and shamiyana setup in Chikkamagaluru."
+  canonical="/contact/"
+>
+  <IslandStyles />
+  <section class="interior-hero" style="--page-hero-image: url('/images/chikkamagaluru-custom-event-design.jpeg')">
+    <div class="container">
+      <p class="eyebrow">Contact</p>
+      <h1>Book event decoration in Chikkamagaluru.</h1>
+      <p class="lead">
+        Share your event date, venue, guest size and decoration idea. Chinmayi
+        Events will help with availability and quote details.
+      </p>
+      <div class="hero-kicker-row">
+        <span>Call</span>
+        <span>WhatsApp</span>
+        <span>Quote request</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact-overview">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Quick contact</p>
+        <h2 class="section-title">Tell us what you are planning.</h2>
+        <p class="lead">
+          For faster pricing, include your event date, venue or area, guest count,
+          function type and any reference photos you like.
+        </p>
+      </div>
+      <div class="contact-card luxe-panel">
+        <span class="contact-person">Contact person: {site.contactPerson}</span>
+        <a href={`tel:${site.phonePrimary}`}>{site.phonePrimaryLabel}</a>
+        <span>{site.phoneSecondaryLabel}</span>
+        <a href={gmailHref()} target="_blank" rel="noopener noreferrer">{site.email}</a>
+        <p>{site.address}</p>
+        <div class="btn-row">
+          <a class="button button-dark" href={whatsappHref()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a class="button button-outline" href={site.mapUrl} target="_blank" rel="noopener noreferrer">Map</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band form-band">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Enquiry form</p>
+        <h2 class="section-title">Request a quote</h2>
+        <p class="lead">The more details you share, the faster we can guide you.</p>
+        <div class="contact-points">
+          <span>Event date</span>
+          <span>Venue area</span>
+          <span>Preferred theme</span>
+        </div>
+      </div>
+      <ContactForm client:load />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-card {
+    display: grid;
+    gap: 12px;
+    padding: 26px;
+  }
+
+  .contact-card a,
+  .contact-card span {
+    font-weight: 850;
+    color: var(--maroon-dark);
+  }
+
+  .contact-card p {
+    color: var(--muted);
+  }
+
+  .contact-person {
+    color: var(--gold-dark) !important;
+    font-size: 0.78rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .form-band {
+    background:
+      linear-gradient(180deg, rgba(251, 247, 239, 0.96), rgba(255, 253, 248, 0.98)),
+      url('/images/chikkamagaluru-gallery-wedding-mandap-2.jpeg') center/cover;
+  }
+
+  .contact-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .contact-points span {
+    border: 1px solid rgba(111, 24, 50, 0.16);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--maroon);
+    padding: 9px 13px;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+</style>
+

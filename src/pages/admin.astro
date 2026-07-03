@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdminPanel from '../components/AdminPanel.jsx';
+import IslandStyles from '../components/IslandStyles.astro';
+---
+
+<BaseLayout
+  title="Admin Panel | Chinmayi Events"
+  description="Chinmayi Events admin panel for gallery media uploads and management."
+  canonical="/admin/"
+>
+  <IslandStyles />
+  <AdminPanel client:only="react" />
+</BaseLayout>

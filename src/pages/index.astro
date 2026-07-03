@@ -1,0 +1,529 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ContactForm from '../components/ContactForm.jsx';
+import TestimonialsPanel from '../components/TestimonialsPanel.jsx';
+import IslandStyles from '../components/IslandStyles.astro';
+import { faqs, site, siteUrl, whatsappHref } from '../data/site.js';
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.name,
+  image: new URL(site.ogImage, siteUrl).toString(),
+  url: siteUrl,
+  telephone: site.phonePrimary,
+  email: site.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Chandrakatte, Behind Shanimahathma Temple, Kempanahalli',
+    addressLocality: site.locality,
+    addressRegion: site.region,
+    postalCode: '577101',
+    addressCountry: site.country
+  },
+  areaServed: ['Chikkamagaluru', 'Kempanahalli', 'Karnataka'],
+  sameAs: [site.instagram],
+  priceRange: 'Contact for quote'
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer
+    }
+  }))
+};
+
+const signatureServices = [
+  ['Wedding Decoration', 'WD'],
+  ['House Warming', 'HW'],
+  ['Reception Decor', 'RD'],
+  ['Outdoor Events', 'OE'],
+  ['Birthday Parties', 'BP'],
+  ['Entry Decoration', 'ED'],
+  ['Vehicle Decoration', 'VD'],
+  ['Floral Decoration', 'FD']
+];
+
+const galleryItems = [
+  '/images/chikkamagaluru-gallery-night-stage-10.jpeg',
+  '/images/chikkamagaluru-reception-stage-decoration.jpeg',
+  '/images/chikkamagaluru-gallery-wedding-mandap-2.jpeg',
+  '/images/chikkamagaluru-gallery-outdoor-decor-5.jpeg',
+  '/images/chikkamagaluru-gallery-stage-lighting-8.jpeg',
+  '/images/chikkamagaluru-gallery-wedding-pathway-11.jpeg',
+  '/images/chikkamagaluru-gallery-floral-backdrop-9.jpeg',
+  '/images/chikkamagaluru-wedding-stage-decoration.jpg',
+  '/images/chikkamagaluru-gallery-entry-decoration-7.jpeg',
+  '/images/chikkamagaluru-gallery-reception-stage-6.jpeg'
+];
+
+const reasons = [
+  ['Creative Concepts', 'Unique ideas for every event'],
+  ['Premium Quality', 'Top quality flowers and materials'],
+  ['Experienced Team', 'Skilled and passionate decorators'],
+  ['Timely Execution', 'On-time setup and perfection'],
+  ['Customer Satisfaction', 'Your happiness is our smile']
+];
+
+const steps = [
+  ['01', 'Consultation', 'We listen to your ideas and requirements'],
+  ['02', 'Planning', 'We plan and design your perfect event'],
+  ['03', 'Execution', 'Our team brings the plan to life'],
+  ['04', 'Perfection', 'We ensure every detail is perfect'],
+  ['05', 'Memories', 'You enjoy the moment forever']
+];
+
+const instagramImages = galleryItems.slice(1, 7);
+---
+
+<BaseLayout
+  title="Event Decoration in Chikkamagaluru | Chinmayi Events"
+  description="Chinmayi Events provides premium wedding, reception, birthday, engagement, flower theme, shamiyana, chair and carpet decoration in Chikkamagaluru."
+  canonical="/"
+  jsonLd={[localBusinessSchema, faqSchema]}
+>
+  <IslandStyles />
+  <Hero />
+
+  <section id="services" class="section signature-services centered">
+    <div class="container">
+      <p class="eyebrow">What we do</p>
+      <h2 class="section-title">Our Signature Services</h2>
+      <div class="ornament"></div>
+      <div class="service-strip">
+        {signatureServices.map(([label, icon]) => (
+          <a href="/services/" class="service-tile">
+            <span>{icon}</span>
+            <strong>{label}</strong>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section recent-work centered">
+    <div class="container">
+      <p class="eyebrow">Our work</p>
+      <h2 class="section-title">Recent Decorations</h2>
+      <div class="ornament"></div>
+      <div class="filter-row" aria-label="Decoration categories">
+        <span class="active">All</span>
+        <span>Wedding</span>
+        <span>Reception</span>
+        <span>House Warming</span>
+        <span>Outdoor</span>
+        <span>Birthday</span>
+        <span>Entry</span>
+        <span>Vehicle</span>
+        <span>Floral</span>
+      </div>
+      <div class="masonry-gallery">
+        {galleryItems.map((src, index) => (
+          <figure class:list={[index === 0 || index === 3 ? 'tall' : '', index === 2 || index === 7 ? 'wide' : '']}>
+            <img src={src} alt={`Chinmayi Events decoration portfolio ${index + 1} in Chikkamagaluru`} loading={index < 3 ? 'eager' : 'lazy'} />
+          </figure>
+        ))}
+      </div>
+      <a class="button button-dark gallery-button" href="/gallery/">View All Gallery</a>
+    </div>
+  </section>
+
+  <section class="section dark-band why-section centered">
+    <div class="container">
+      <p class="eyebrow">Why choose us</p>
+      <h2 class="section-title">We Make Every Moment Special</h2>
+      <div class="why-grid">
+        {reasons.map(([title, text]) => (
+          <article>
+            <span>*</span>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section process-section centered">
+    <div class="container">
+      <p class="eyebrow">Our process</p>
+      <h2 class="section-title">From Concept to Celebration</h2>
+      <div class="process-line">
+        {steps.map(([number, title, text]) => (
+          <article>
+            <div class="process-icon">{number}</div>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials" class="section proof-section">
+    <div class="container">
+      <TestimonialsPanel client:load />
+    </div>
+  </section>
+
+
+  <section class="section instagram-section centered">
+    <div class="container">
+      <p class="eyebrow">Follow us on Instagram</p>
+      <h2>@chinmayi.events</h2>
+      <div class="instagram-row">
+        {instagramImages.map((src, index) => (
+          <img src={src} alt={`Instagram decoration preview ${index + 1} from Chinmayi Events`} loading="lazy" />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="whatsapp-band">
+    <div class="container whatsapp-card">
+      <div class="wa-icon">WA</div>
+      <div>
+        <h2>Let's Plan Your Dream Event</h2>
+        <p>Get in touch with us for a free consultation.</p>
+      </div>
+      <a class="button button-primary" href={whatsappHref()} target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+    </div>
+  </section>
+
+  <section id="quote" class="section contact-section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Request a quote</p>
+        <h2 class="section-title">Tell us about your event date and venue.</h2>
+        <p class="lead">
+          Share the event type, venue, date, guest size and decoration style.
+          Chinmayi Events will respond with next steps.
+        </p>
+      </div>
+      <ContactForm client:load />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .signature-services {
+    background: linear-gradient(180deg, #fffdf8, #fbf6ee);
+  }
+
+  .ornament {
+    width: 64px;
+    height: 12px;
+    margin: 8px auto 34px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.8;
+  }
+
+  .service-strip {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .service-tile {
+    min-height: 134px;
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: #fff;
+    padding: 18px 10px;
+    box-shadow: 0 10px 28px rgba(38, 23, 15, 0.06);
+  }
+
+  .service-tile span {
+    color: var(--gold);
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .service-tile strong {
+    color: #3b3029;
+    font-size: 0.86rem;
+    line-height: 1.2;
+  }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 28px;
+    color: #7b7169;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .filter-row span {
+    border-radius: 8px;
+    padding: 8px 13px;
+  }
+
+  .filter-row .active {
+    background: var(--maroon);
+    color: #fff;
+  }
+
+  .masonry-gallery {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-rows: 132px;
+    gap: 8px;
+  }
+
+  .masonry-gallery figure {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--soft);
+  }
+
+  .masonry-gallery figure.tall {
+    grid-row: span 2;
+  }
+
+  .masonry-gallery figure.wide {
+    grid-column: span 2;
+  }
+
+  .masonry-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 220ms ease;
+  }
+
+  .masonry-gallery figure:hover img {
+    transform: scale(1.04);
+  }
+
+  .gallery-button {
+    margin-top: 28px;
+  }
+
+  .why-section {
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0.86)),
+      url('/images/chikkamagaluru-gallery-stage-lighting-8.jpeg') center/cover;
+  }
+
+  .why-section .section-title,
+  .proof-section h2,
+  .instagram-section h2,
+  .whatsapp-card h2 {
+    color: inherit;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 48px;
+  }
+
+  .why-grid article span {
+    color: var(--gold);
+    font-size: 2.2rem;
+  }
+
+  .why-grid h3 {
+    margin: 12px 0 8px;
+    font-size: 1rem;
+  }
+
+  .why-grid p {
+    margin: 0;
+    color: rgba(255, 248, 236, 0.64);
+    font-size: 0.82rem;
+  }
+
+  .process-line {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 28px;
+    margin-top: 48px;
+  }
+
+  .process-line article {
+    position: relative;
+  }
+
+  .process-line article:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 38px;
+    right: -24px;
+    width: 32px;
+    border-top: 1px dashed var(--gold);
+  }
+
+  .process-icon {
+    width: 78px;
+    height: 78px;
+    margin: 0 auto 16px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(217, 173, 82, 0.55);
+    border-radius: 50%;
+    color: var(--gold-dark);
+    font-weight: 900;
+  }
+
+  .process-line h3 {
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+  }
+
+  .process-line p {
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+
+  .proof-section {
+    background: #fffaf1;
+  }
+
+
+  .instagram-section {
+    padding-top: 56px;
+  }
+
+  .instagram-section h2 {
+    font-size: 1.7rem;
+  }
+
+  .instagram-row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 30px;
+  }
+
+  .instagram-row img {
+    width: 100%;
+    aspect-ratio: 1.3;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 10px 24px rgba(38, 23, 15, 0.08);
+  }
+
+  .whatsapp-band {
+    padding: 26px 0;
+    background: #fff;
+  }
+
+  .whatsapp-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 22px;
+    border-radius: 4px;
+    padding: 28px 36px;
+    background:
+      linear-gradient(135deg, rgba(111, 24, 50, 0.96), rgba(72, 16, 34, 0.96)),
+      radial-gradient(circle at 0 0, rgba(217, 173, 82, 0.28), transparent 30%);
+    color: #fff8ec;
+  }
+
+  .wa-icon {
+    width: 70px;
+    height: 70px;
+    display: grid;
+    place-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.62);
+    border-radius: 50%;
+    font-size: 2rem;
+  }
+
+  .whatsapp-card h2 {
+    margin-bottom: 6px;
+    font-size: 1.75rem;
+  }
+
+  .whatsapp-card p {
+    margin: 0;
+    color: rgba(255, 248, 236, 0.78);
+  }
+
+  .contact-section {
+    background: var(--soft);
+  }
+
+  @media (max-width: 980px) {
+    .service-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .masonry-gallery {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .why-grid,
+    .process-line,
+    .highlight-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-line article:not(:last-child)::after {
+      display: none;
+    }
+
+    .instagram-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .service-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filter-row {
+      gap: 6px;
+      font-size: 0.66rem;
+    }
+
+    .masonry-gallery {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 126px;
+    }
+
+    .masonry-gallery figure.wide {
+      grid-column: span 2;
+    }
+
+    .instagram-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .whatsapp-card {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 26px 20px;
+    }
+
+    .wa-icon {
+      margin-inline: auto;
+    }
+  }
+</style>
+
+
+
+
+
+

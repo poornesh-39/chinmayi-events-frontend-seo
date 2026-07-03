@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryPreview from '../../components/GalleryPreview.astro';
+import ContactForm from '../../components/ContactForm.jsx';
+import IslandStyles from '../../components/IslandStyles.astro';
+import { services, site, siteUrl, whatsappHref } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service }
+  }));
+}
+
+const { service } = Astro.props;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.title,
+  description: service.description,
+  keywords: service.keywords,
+  image: new URL(service.image, siteUrl).toString(),
+  provider: {
+    '@type': 'LocalBusiness',
+    name: site.name,
+    telephone: site.phonePrimary,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: site.locality,
+      addressRegion: site.region,
+      addressCountry: site.country
+    }
+  },
+  areaServed: ['Chikkamagaluru', 'Kempanahalli', 'Karnataka'],
+  url: new URL(`/services/${service.slug}/`, siteUrl).toString()
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: new URL('/services/', siteUrl).toString() },
+    { '@type': 'ListItem', position: 3, name: service.title, item: new URL(`/services/${service.slug}/`, siteUrl).toString() }
+  ]
+};
+---
+
+<BaseLayout
+  title={`${service.title} | Chinmayi Events`}
+  description={service.description}
+  canonical={`/services/${service.slug}/`}
+  image={service.image}
+  jsonLd={[schema, breadcrumbSchema]}
+>
+  <IslandStyles />
+  <section class="interior-hero" style={`--page-hero-image: url('${service.image}')`}>
+    <div class="container">
+      <p class="eyebrow">Chinmayi Events</p>
+      <h1>{service.title}</h1>
+      <p>{service.description}</p>
+      <div class="btn-row">
+        <a class="button button-primary" href={whatsappHref(`Hi Chinmayi Events, I am interested in ${service.title}.`)} target="_blank" rel="noopener noreferrer">WhatsApp for Quote</a>
+        <a class="button button-ghost" href="/contact/">Send Enquiry</a>
+      </div>
+      <div class="hero-kicker-row">
+        <span>Chikkamagaluru</span>
+        <span>Custom design</span>
+        <span>Venue-ready setup</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">What is included</p>
+        <h2 class="section-title">Designed around your venue, rituals and photographs.</h2>
+        <p class="lead">
+          Chinmayi Events keeps the setup practical and polished: decor that
+          fits the venue, supports the event flow and gives your family a
+          beautiful backdrop for memories.
+        </p>
+      </div>
+      <div class="highlight-list luxe-panel">
+        {service.highlights.map((item) => <span>{item}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark-band service-process">
+    <div class="container centered">
+      <p class="eyebrow">Our process</p>
+      <h2 class="section-title">From reference photo to finished celebration.</h2>
+      <div class="service-steps">
+        <article><strong>01</strong><span>Share your date, venue and theme idea.</span></article>
+        <article><strong>02</strong><span>We suggest the decor layout and materials.</span></article>
+        <article><strong>03</strong><span>The team sets up, checks details and hands over the venue.</span></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="container">
+      <p class="eyebrow">Portfolio</p>
+      <h2 class="section-title">A glimpse of our event decoration work</h2>
+      <GalleryPreview compact={true} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Get pricing</p>
+        <h2 class="section-title">Request availability for your date.</h2>
+        <p class="lead">Mention your venue, date, guest size and preferred theme for a faster quote.</p>
+      </div>
+      <ContactForm client:load />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .interior-hero .btn-row {
+    margin-top: 26px;
+  }
+
+  .highlight-list {
+    display: grid;
+    gap: 12px;
+    padding: 22px;
+  }
+
+  .highlight-list span {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+    background: #fff;
+    color: var(--maroon-dark);
+    font-weight: 850;
+  }
+
+  .service-process {
+    background:
+      linear-gradient(rgba(8, 7, 6, 0.9), rgba(8, 7, 6, 0.92)),
+      url('/images/chikkamagaluru-gallery-night-stage-10.jpeg') center/cover;
+  }
+
+  .service-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 28px;
+  }
+
+  .service-steps article {
+    border: 1px solid rgba(217, 173, 82, 0.28);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 24px;
+  }
+
+  .service-steps strong,
+  .service-steps span {
+    display: block;
+  }
+
+  .service-steps strong {
+    color: var(--gold);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.8rem;
+  }
+
+  .service-steps span {
+    color: rgba(255, 248, 236, 0.78);
+  }
+
+  @media (max-width: 760px) {
+    .service-steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

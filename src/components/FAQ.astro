@@ -1,0 +1,37 @@
+---
+import { faqs } from '../data/site.js';
+---
+
+<div class="faq-list">
+  {faqs.map((faq) => (
+    <details>
+      <summary>{faq.question}</summary>
+      <p>{faq.answer}</p>
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  details {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    padding: 18px 20px;
+  }
+
+  summary {
+    cursor: pointer;
+    color: var(--ink);
+    font-weight: 850;
+  }
+
+  p {
+    margin: 14px 0 0;
+    color: var(--muted);
+  }
+</style>

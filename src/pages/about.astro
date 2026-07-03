@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GalleryPreview from '../components/GalleryPreview.astro';
+import { site, whatsappHref } from '../data/site.js';
+---
+
+<BaseLayout
+  title="About Chinmayi Events | Chikkamagaluru Event Decorators"
+  description="Learn about Chinmayi Events, a Chikkamagaluru event decoration firm for weddings, receptions, birthdays, engagements and custom celebrations."
+  canonical="/about/"
+>
+  <section class="interior-hero" style="--page-hero-image: url('/images/chikkamagaluru-event-centerpiece-decoration.avif')">
+    <div class="container">
+      <p class="eyebrow">About Chinmayi Events</p>
+      <h1>Decor that respects the family, the venue and the moment.</h1>
+      <p class="lead">
+        Chinmayi Events helps families in Chikkamagaluru create beautiful,
+        photograph-ready celebrations with thoughtful decoration and reliable setup.
+      </p>
+      <div class="hero-kicker-row">
+        <span>Local team</span>
+        <span>Premium stage decor</span>
+        <span>Custom themes</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section story-section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Our approach</p>
+        <h2 class="section-title">Premium does not have to feel distant.</h2>
+        <p class="lead">
+          The team blends traditional Indian celebration details with clean,
+          contemporary staging. Every setup is planned around the function type,
+          venue constraints, guest movement and the photographs families will
+          remember for years.
+        </p>
+        <div class="btn-row">
+          <a class="button button-dark" href="/gallery/">View Our Work</a>
+          <a class="button button-outline" href={whatsappHref()} target="_blank" rel="noopener noreferrer">Talk to Us</a>
+        </div>
+      </div>
+      <div class="values luxe-panel">
+        <span>Creative stage design</span>
+        <span>Personalized event themes</span>
+        <span>Careful materials and setup</span>
+        <span>Local Chikkamagaluru service</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark-band promise-band">
+    <div class="container centered">
+      <p class="eyebrow">Why families choose us</p>
+      <h2 class="section-title">We make every celebration feel intentional.</h2>
+      <p class="promise-lead">Clear ideas, careful setup and decoration that looks beautiful in person and in photographs.</p>
+      <div class="promise-grid">
+        <article><em>01</em><strong>Design</strong><span>Decor concepts shaped around your event style, family preferences and venue mood.</span></article>
+        <article><em>02</em><strong>Execution</strong><span>Setup planning that respects venue timing, guest movement and function flow.</span></article>
+        <article><em>03</em><strong>Finish</strong><span>Photogenic details, lighting balance and final checks before the celebration begins.</span></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="container">
+      <p class="eyebrow">Visual style</p>
+      <h2 class="section-title">A portfolio built around celebrations.</h2>
+      <GalleryPreview compact={true} />
+    </div>
+  </section>
+
+  <section class="section cta-section">
+    <div class="container contact-line">
+      <div>
+        <p class="eyebrow">Start planning</p>
+        <h2>Planning an event near {site.locality}?</h2>
+        <span>Share your date, venue and decoration idea. We will help you shape the setup.</span>
+      </div>
+      <a class="button button-primary" href="/contact/">Contact Chinmayi Events</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .story-section .btn-row {
+    margin-top: 24px;
+  }
+
+  .values {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 22px;
+  }
+
+  .values span {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    padding: 18px;
+    color: var(--maroon-dark);
+    font-weight: 850;
+  }
+
+  .promise-band {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 0, rgba(217, 173, 82, 0.18), transparent 34%),
+      linear-gradient(rgba(8, 7, 6, 0.88), rgba(8, 7, 6, 0.94)),
+      url('/images/chikkamagaluru-gallery-night-stage-10.jpeg') center/cover;
+  }
+
+  .promise-lead {
+    max-width: 680px;
+    margin: -4px auto 0;
+    color: rgba(255, 248, 236, 0.72);
+  }
+
+  .promise-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+
+  .promise-grid article {
+    position: relative;
+    min-height: 210px;
+    display: grid;
+    align-content: end;
+    gap: 9px;
+    border: 1px solid rgba(217, 173, 82, 0.32);
+    border-radius: 8px;
+    padding: 26px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035));
+    box-shadow: 0 18px 52px rgba(0, 0, 0, 0.22);
+  }
+
+  .promise-grid em {
+    position: absolute;
+    top: 20px;
+    left: 22px;
+    color: rgba(217, 173, 82, 0.34);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 3.2rem;
+    font-style: normal;
+    line-height: 1;
+  }
+
+  .promise-grid strong,
+  .promise-grid span {
+    display: block;
+    position: relative;
+  }
+
+  .promise-grid strong {
+    color: var(--gold);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.55rem;
+  }
+
+  .promise-grid span {
+    color: rgba(255, 248, 236, 0.76);
+  }
+
+  .cta-section {
+    background: #fffdf8;
+  }
+
+  .contact-line {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    overflow: hidden;
+    border-radius: 8px;
+    padding: 34px;
+    background:
+      linear-gradient(90deg, rgba(33, 8, 15, 0.96), rgba(111, 24, 50, 0.9)),
+      url('/images/chikkamagaluru-gallery-floral-stage-4.jpeg') center/cover;
+    box-shadow: var(--shadow);
+  }
+
+  .contact-line h2 {
+    margin: 0 0 8px;
+    color: #fff8ec;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+  }
+
+  .contact-line span {
+    color: rgba(255, 248, 236, 0.72);
+  }
+
+  .contact-line .button {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 760px) {
+    .values,
+    .promise-grid,
+    .contact-line {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

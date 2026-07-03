@@ -1,0 +1,155 @@
+---
+import { site, whatsappHref } from '../data/site.js';
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => {
+  if (href === '/') return pathname === '/';
+  if (href === '/services/') return pathname.startsWith('/services/');
+  return pathname === href;
+};
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/about/', label: 'About Us' },
+  { href: '/services/', label: 'Services' },
+  { href: '/gallery/', label: 'Gallery' },
+  { href: '/#testimonials', label: 'Testimonials', active: pathname === '/' && Astro.url.hash === '#testimonials' },
+  { href: '/contact/', label: 'Contact Us' }
+];
+---
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="/" aria-label="Chinmayi Events home">
+      <img src={site.logo} alt="Chinmayi Events logo" width="52" height="52" />
+      <span>Chinmayi Events</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[isActive(item.href) || item.active ? 'active' : '']}
+          aria-current={isActive(item.href) || item.active ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <a class="nav-cta" href={whatsappHref()} target="_blank" rel="noopener noreferrer">Get a Quote</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+  }
+
+  .nav {
+    min-height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gold);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.52rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .brand img {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2vw, 26px);
+    color: rgba(255, 248, 236, 0.72);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  nav a {
+    position: relative;
+    padding: 30px 0 18px;
+    transition: color 160ms ease;
+  }
+
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: center;
+    background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+    transition: transform 180ms ease;
+  }
+
+  nav a.active,
+  nav a:hover {
+    color: var(--gold);
+  }
+
+  nav a.active::after,
+  nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav-cta {
+    border-radius: 4px;
+    padding: 13px 18px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #24180b;
+    font-size: 0.72rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 980px) {
+    nav {
+      display: none;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .site-header {
+      position: absolute;
+    }
+
+    .nav {
+      min-height: 72px;
+    }
+
+    .brand span {
+      font-size: 1.16rem;
+    }
+
+    .nav-cta {
+      padding: 11px 12px;
+    }
+  }
+</style>
+
