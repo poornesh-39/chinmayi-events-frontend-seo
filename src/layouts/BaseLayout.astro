@@ -10,7 +10,8 @@ const {
   description = site.description,
   canonical = Astro.url.pathname,
   image = site.ogImage,
-  jsonLd = []
+  jsonLd = [],
+  preloadHero = false
 } = Astro.props;
 
 const canonicalUrl = new URL(canonical, siteUrl).toString();
@@ -30,7 +31,7 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
     <link rel="icon" href="/images/chinmayi-events-logo.jpeg" />
     <link rel="apple-touch-icon" href="/images/chinmayi-events-logo.jpeg" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="preload" as="image" href={site.heroImage} fetchpriority="high" />
+    {preloadHero && <link rel="preload" as="image" href={site.heroImage} fetchpriority="high" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_IN" />
@@ -58,3 +59,7 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
     <StickyActions />
   </body>
 </html>
+
+
+
+

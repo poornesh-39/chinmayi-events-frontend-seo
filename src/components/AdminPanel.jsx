@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiUrl } from '../data/site.js';
+import QuotationTool from './QuotationTool.jsx';
 import './AdminPanel.css';
 
 const credentials = {
@@ -245,16 +246,9 @@ export default function AdminPanel() {
         </div>
       )}
 
-      {activeTab === 'quotations' && (
-        <div className="admin-card quote-card">
-          <h2>Quotation Tool</h2>
-          <p>
-            The full PDF quotation creator still lives in the existing frontend admin panel.
-            Keep using it there until we port that larger workflow into this Astro admin.
-          </p>
-          <a href="https://chinmayi-events.netlify.app" target="_blank" rel="noopener noreferrer">Open existing admin</a>
-        </div>
-      )}
+      {activeTab === 'quotations' && <QuotationTool />}
     </section>
   );
 }
+
+

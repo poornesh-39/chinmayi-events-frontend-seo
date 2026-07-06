@@ -27,7 +27,7 @@ export const whatsappNumber =
 const directApiUrl = (import.meta.env.PUBLIC_API_URL || '').replace(/\/$/, '');
 
 export const apiUrl =
-  import.meta.env.PUBLIC_USE_DIRECT_API === 'true' ? directApiUrl : '';
+  directApiUrl || '';
 
 export const siteUrl =
   import.meta.env.PUBLIC_SITE_URL || 'https://chinmayi-events.netlify.app';
@@ -199,6 +199,7 @@ export const processSteps = [
   'Confirm the design, materials and setup timeline.',
   'Relax while the team prepares and decorates your venue.'
 ];
+
 
 
 
