@@ -47,7 +47,7 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
     <meta name="twitter:image" content={imageUrl} />
 
     {ldItems.map((item) => (
-      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />
     ))}
   </head>
   <body>
@@ -59,6 +59,7 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
     <StickyActions />
   </body>
 </html>
+
 
 
 

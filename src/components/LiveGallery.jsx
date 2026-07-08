@@ -8,6 +8,8 @@ const categoryOrder = [
   'engagement',
   'haldi(pre-wedding)',
   'housewarming',
+  'outdoor',
+  'vehicle',
   'birthday',
   'naming-ceremony',
   'corporate',
@@ -21,6 +23,8 @@ const categoryLabels = {
   engagement: 'Engagement',
   'haldi(pre-wedding)': 'Pre-Wedding',
   housewarming: 'House Warming',
+  outdoor: 'Outdoor',
+  vehicle: 'Vehicle',
   birthday: 'Birthday',
   'naming-ceremony': 'Naming Ceremony',
   corporate: 'Corporate',
@@ -32,15 +36,10 @@ const normalizeCategory = (value) => String(value || 'other').trim().toLowerCase
 const labelForCategory = (category) =>
   categoryLabels[category] || category.replace(/[-_]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 
-const thumbnailFor = (item) => {
+const imageFor = (item) => {
   const url = item?.cloudinaryUrl || '';
   if (!url || !url.includes('cloudinary')) return url;
-  if (item.mediaType !== 'video') {
-    return url.replace('/upload/', '/upload/c_fill,w_720,h_520,q_auto,f_auto/');
-  }
-  return url
-    .replace('/upload/', '/upload/c_fill,w_720,h_520,q_auto,f_auto/')
-    .replace(/\.(mp4|webm)$/i, '.jpg');
+  return url.replace('/upload/', '/upload/q_auto,f_auto/');
 };
 
 export default function LiveGallery() {
@@ -83,7 +82,7 @@ export default function LiveGallery() {
       ? items
       : items.filter((item) => normalizeCategory(item.eventCategory) === activeCategory);
 
-    return filteredItems.slice(0, 18);
+    return filteredItems;
   }, [activeCategory, items]);
 
   if (state === 'loading') {
@@ -91,7 +90,7 @@ export default function LiveGallery() {
   }
 
   if (state === 'error' || items.length === 0) {
-    return <p className="live-note">Recent photos are being updated. Please check the featured work above.</p>;
+    return <p className="live-note">Gallery media is being updated. Please check back soon.</p>;
   }
 
   return (
@@ -111,19 +110,30 @@ export default function LiveGallery() {
 
       <div className="live-gallery">
         {visibleItems.map((item) => {
-          const category = normalizeCategory(item.eventCategory);
+          const isVideo = item.mediaType === 'video';
+          const mediaUrl = isVideo ? item.cloudinaryUrl : imageFor(item);
 
           return (
-            <article key={item._id}>
-              <img src={thumbnailFor(item)} alt={`${item.title} by Chinmayi Events`} loading="lazy" />
-              <div>
-                <h3>{item.title}</h3>
-                <p>{labelForCategory(category)} · {item.mediaType === 'video' ? 'Video' : 'Photo'}</p>
-              </div>
-            </article>
+            <figure key={item._id}>
+              {isVideo ? (
+                <video
+                  src={mediaUrl}
+                  aria-label={`${item.title || 'Event video'} by Chinmayi Events`}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  preload="metadata"
+                />
+              ) : (
+                <img src={mediaUrl} alt={`${item.title || 'Event decoration'} by Chinmayi Events`} loading="lazy" />
+              )}
+            </figure>
           );
         })}
       </div>
     </div>
   );
 }
+

@@ -13,7 +13,7 @@ export const site = {
   locality: 'Chikkamagaluru',
   region: 'Karnataka',
   country: 'IN',
-  instagram: 'https://instagram.com/chinmayi_decorators/',
+  instagram: 'https://www.instagram.com/chinmayi_events/',
   mapUrl:
     'https://www.google.com/maps/search/?api=1&query=Chandrakatte%2C%20Behind%20Shanimahathma%20Temple%2C%20Kempanahalli%2C%20Chikkamagaluru%20577101',
   logo: '/images/chinmayi-events-logo.jpeg',
@@ -199,6 +199,7 @@ export const processSteps = [
   'Confirm the design, materials and setup timeline.',
   'Relax while the team prepares and decorates your venue.'
 ];
+
 
 
 

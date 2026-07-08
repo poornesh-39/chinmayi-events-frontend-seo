@@ -16,6 +16,8 @@ const categories = [
   ['haldi(pre-wedding)', 'Haldi (Pre-Wedding)'],
   ['naming-ceremony', 'Naming Ceremony'],
   ['housewarming', 'Housewarming'],
+  ['outdoor', 'Outdoor Events'],
+  ['vehicle', 'Vehicle Decoration'],
   ['corporate', 'Corporate'],
   ['other', 'Other']
 ];
@@ -250,5 +252,4 @@ export default function AdminPanel() {
     </section>
   );
 }
-
 

@@ -41,14 +41,46 @@ const faqSchema = {
 };
 
 const signatureServices = [
-  ['Wedding Decoration', 'WD'],
-  ['House Warming', 'HW'],
-  ['Reception Decor', 'RD'],
-  ['Outdoor Events', 'OE'],
-  ['Birthday Parties', 'BP'],
-  ['Entry Decoration', 'ED'],
-  ['Vehicle Decoration', 'VD'],
-  ['Floral Decoration', 'FD']
+  {
+    label: 'Wedding Decoration',
+    image: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
+    alt: 'Wedding stage decoration by Chinmayi Events in Chikkamagaluru'
+  },
+  {
+    label: 'House Warming',
+    image: '/images/chikkamagaluru-event-centerpiece-decoration.avif',
+    alt: 'Event centerpiece decoration suitable for house warming celebrations'
+  },
+  {
+    label: 'Reception Decor',
+    image: '/images/chikkamagaluru-reception-stage-decoration.jpeg',
+    alt: 'Reception stage decoration by Chinmayi Events'
+  },
+  {
+    label: 'Outdoor Events',
+    image: '/images/chikkamagaluru-gallery-outdoor-decor-5.jpeg',
+    alt: 'Outdoor event decoration setup in Chikkamagaluru'
+  },
+  {
+    label: 'Birthday Parties',
+    image: '/images/chikkamagaluru-birthday-cake-table-decoration.jpg',
+    alt: 'Birthday cake table decoration by Chinmayi Events'
+  },
+  {
+    label: 'Entry Decoration',
+    image: '/images/chikkamagaluru-gallery-entry-decoration-7.jpeg',
+    alt: 'Entry decoration with event lighting and floral details'
+  },
+  {
+    label: 'Vehicle Decoration',
+    image: '/images/chikkamagaluru-flower-theme-decoration.jpg',
+    alt: 'Floral decoration style used by Chinmayi Events'
+  },
+  {
+    label: 'Floral Decoration',
+    image: '/images/chikkamagaluru-gallery-floral-backdrop-9.jpeg',
+    alt: 'Floral backdrop decoration by Chinmayi Events'
+  }
 ];
 
 const galleryItems = [
@@ -61,15 +93,42 @@ const galleryItems = [
   '/images/chikkamagaluru-gallery-floral-backdrop-9.jpeg',
   '/images/chikkamagaluru-wedding-stage-decoration.jpg',
   '/images/chikkamagaluru-gallery-entry-decoration-7.jpeg',
-  '/images/chikkamagaluru-gallery-reception-stage-6.jpeg'
+  '/images/chikkamagaluru-gallery-reception-stage-6.jpeg',
+  '/images/chikkamagaluru-gallery-ceremony-stage-12.jpeg',
+  '/images/chikkamagaluru-gallery-floral-entrance-13.jpeg',
+  '/images/chikkamagaluru-gallery-stage-backdrop-14.jpeg',
+  '/images/chikkamagaluru-gallery-wedding-decor-15.jpeg',
+  '/images/chikkamagaluru-gallery-reception-decor-16.jpeg',
+  '/images/chikkamagaluru-gallery-floral-stage-17.jpeg',
+  '/images/chikkamagaluru-gallery-event-lighting-18.jpeg'
 ];
 
 const reasons = [
-  ['Creative Concepts', 'Unique ideas for every event'],
-  ['Premium Quality', 'Top quality flowers and materials'],
-  ['Experienced Team', 'Skilled and passionate decorators'],
-  ['Timely Execution', 'On-time setup and perfection'],
-  ['Customer Satisfaction', 'Your happiness is our smile']
+  {
+    title: 'Creative Concepts',
+    text: 'Unique ideas for every event',
+    icon: 'M12 3l1.55 5.08L18 6l-2.08 4.45L21 12l-5.08 1.55L18 18l-4.45-2.08L12 21l-1.55-5.08L6 18l2.08-4.45L3 12l5.08-1.55L6 6l4.45 2.08L12 3Z'
+  },
+  {
+    title: 'Premium Quality',
+    text: 'Top quality flowers and materials',
+    icon: 'M6.5 4h11L21 9l-9 11L3 9l3.5-5Zm-2 5h15M8 4l4 16 4-16'
+  },
+  {
+    title: 'Experienced Team',
+    text: 'Skilled and passionate decorators',
+    icon: 'M16 19v-1.5a4 4 0 0 0-8 0V19m8-11a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm2.5 4.5a3 3 0 0 1 2.5 3V18M18 5.4a3 3 0 0 1 0 5.2'
+  },
+  {
+    title: 'Timely Execution',
+    text: 'On-time setup and perfection',
+    icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2'
+  },
+  {
+    title: 'Customer Satisfaction',
+    text: 'Your happiness is our smile',
+    icon: 'M20.4 5.6a5.1 5.1 0 0 0-7.2 0L12 6.8l-1.2-1.2a5.1 5.1 0 1 0-7.2 7.2L12 21l8.4-8.2a5.1 5.1 0 0 0 0-7.2Z'
+  }
 ];
 
 const steps = [
@@ -99,10 +158,10 @@ const instagramImages = galleryItems.slice(1, 7);
       <h2 class="section-title">Our Signature Services</h2>
       <div class="ornament"></div>
       <div class="service-strip">
-        {signatureServices.map(([label, icon]) => (
+        {signatureServices.map((service) => (
           <a href="/services/" class="service-tile">
-            <span>{icon}</span>
-            <strong>{label}</strong>
+            <img src={service.image} alt={service.alt} loading="lazy" width="320" height="260" />
+            <strong>{service.label}</strong>
           </a>
         ))}
       </div>
@@ -114,17 +173,6 @@ const instagramImages = galleryItems.slice(1, 7);
       <p class="eyebrow">Our work</p>
       <h2 class="section-title">Recent Decorations</h2>
       <div class="ornament"></div>
-      <div class="filter-row" aria-label="Decoration categories">
-        <span class="active">All</span>
-        <span>Wedding</span>
-        <span>Reception</span>
-        <span>House Warming</span>
-        <span>Outdoor</span>
-        <span>Birthday</span>
-        <span>Entry</span>
-        <span>Vehicle</span>
-        <span>Floral</span>
-      </div>
       <div class="masonry-gallery">
         {galleryItems.map((src, index) => (
           <figure class:list={[index === 0 || index === 3 ? 'tall' : '', index === 2 || index === 7 ? 'wide' : '']}>
@@ -141,11 +189,15 @@ const instagramImages = galleryItems.slice(1, 7);
       <p class="eyebrow">Why choose us</p>
       <h2 class="section-title">We Make Every Moment Special</h2>
       <div class="why-grid">
-        {reasons.map(([title, text]) => (
+        {reasons.map((reason) => (
           <article>
-            <span>*</span>
-            <h3>{title}</h3>
-            <p>{text}</p>
+            <span class="reason-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d={reason.icon} fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <h3>{reason.title}</h3>
+            <p>{reason.text}</p>
           </article>
         ))}
       </div>
@@ -178,7 +230,7 @@ const instagramImages = galleryItems.slice(1, 7);
   <section class="section instagram-section centered">
     <div class="container">
       <p class="eyebrow">Follow us on Instagram</p>
-      <h2>@chinmayi.events</h2>
+      <h2><a href={site.instagram} target="_blank" rel="noopener noreferrer">@chinmayi_events</a></h2>
       <div class="instagram-row">
         {instagramImages.map((src, index) => (
           <img src={src} alt={`Instagram decoration preview ${index + 1} from Chinmayi Events`} loading="lazy" />
@@ -233,50 +285,53 @@ const instagramImages = galleryItems.slice(1, 7);
   }
 
   .service-tile {
-    min-height: 134px;
+    min-height: 174px;
+    position: relative;
     display: grid;
-    place-items: center;
-    gap: 8px;
+    align-items: end;
     border: 1px solid var(--line);
     border-radius: 3px;
-    background: #fff;
-    padding: 18px 10px;
+    overflow: hidden;
+    background: var(--soft);
     box-shadow: 0 10px 28px rgba(38, 23, 15, 0.06);
   }
 
-  .service-tile span {
-    color: var(--gold);
-    font-size: 2rem;
-    line-height: 1;
+  .service-tile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 24%, rgba(28, 15, 11, 0.82));
+    transition: background 180ms ease;
+  }
+
+  .service-tile:hover::after {
+    background: linear-gradient(180deg, rgba(28, 15, 11, 0.08), rgba(28, 15, 11, 0.88));
+  }
+
+  .service-tile img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 220ms ease;
+  }
+
+  .service-tile:hover img {
+    transform: scale(1.045);
   }
 
   .service-tile strong {
-    color: #3b3029;
-    font-size: 0.86rem;
+    position: relative;
+    z-index: 1;
+    min-height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 10px;
+    color: #fff8ec;
+    font-size: 0.82rem;
     line-height: 1.2;
-  }
-
-  .filter-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 18px;
-    margin-bottom: 28px;
-    color: #7b7169;
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .filter-row span {
-    border-radius: 8px;
-    padding: 8px 13px;
-  }
-
-  .filter-row .active {
-    background: var(--maroon);
-    color: #fff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.36);
   }
 
   .masonry-gallery {
@@ -336,9 +391,33 @@ const instagramImages = galleryItems.slice(1, 7);
     margin-top: 48px;
   }
 
-  .why-grid article span {
+  .reason-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto;
+    position: relative;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(217, 173, 82, 0.62);
+    border-radius: 50%;
+    background: rgba(217, 173, 82, 0.1);
     color: var(--gold);
-    font-size: 2.2rem;
+  }
+
+  .reason-icon::before {
+    content: none;
+    display: none;
+  }
+
+  .reason-icon svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    overflow: visible;
+  }
+
+  .reason-icon path {
+    vector-effect: non-scaling-stroke;
   }
 
   .why-grid h3 {
@@ -493,11 +572,6 @@ const instagramImages = galleryItems.slice(1, 7);
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .filter-row {
-      gap: 6px;
-      font-size: 0.66rem;
-    }
-
     .masonry-gallery {
       grid-template-columns: 1fr 1fr;
       grid-auto-rows: 126px;
@@ -522,11 +596,4 @@ const instagramImages = galleryItems.slice(1, 7);
     }
   }
 </style>
-
-
-
-
-
-
-
 
