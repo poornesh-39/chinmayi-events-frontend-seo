@@ -317,10 +317,22 @@ export default function QuotationTool() {
           </div>
           {items.map((item) => (
             <div className="quote-item-row" key={item.id}>
-              <input value={item.material} onChange={(event) => updateItem(item.id, 'material', event.target.value)} placeholder="Flowers, stage backdrop, lighting..." />
-              <input type="number" min="1" value={item.quantity} onChange={(event) => updateItem(item.id, 'quantity', event.target.value)} />
-              <input type="number" min="0" value={item.amount} onChange={(event) => updateItem(item.id, 'amount', event.target.value)} />
-              <strong>Rs. {(Number(item.quantity || 0) * Number(item.amount || 0)).toFixed(2)}</strong>
+              <label>
+                <span>Material / Item</span>
+                <input value={item.material} onChange={(event) => updateItem(item.id, 'material', event.target.value)} placeholder="Flowers, stage backdrop, lighting..." />
+              </label>
+              <label>
+                <span>Qty</span>
+                <input type="number" min="1" value={item.quantity} onChange={(event) => updateItem(item.id, 'quantity', event.target.value)} />
+              </label>
+              <label>
+                <span>Rate</span>
+                <input type="number" min="0" value={item.amount} onChange={(event) => updateItem(item.id, 'amount', event.target.value)} />
+              </label>
+              <div className="quote-line-total">
+                <span>Total</span>
+                <strong>Rs. {(Number(item.quantity || 0) * Number(item.amount || 0)).toFixed(2)}</strong>
+              </div>
               <button type="button" className="remove-item-btn" onClick={() => removeItem(item.id)} disabled={items.length === 1}>Remove</button>
             </div>
           ))}

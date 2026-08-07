@@ -52,9 +52,21 @@
 
 .proof-showcase {
   display: grid;
-  grid-template-columns: minmax(240px, 0.92fr) minmax(340px, 1.2fr) minmax(240px, 0.92fr);
+  grid-template-columns: minmax(320px, 1fr) minmax(0, 1.65fr);
   gap: 24px;
-  align-items: stretch;
+  align-items: start;
+}
+
+.highlight-showcase-block,
+.reviews-showcase-block {
+  display: grid;
+  gap: 14px;
+}
+
+.review-cards-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
 }
 
 .review-card-live,
@@ -217,8 +229,10 @@
   gap: 9px;
 }
 
-.highlight-dots {
-  margin-top: -12px;
+.highlight-dots,
+.review-dots {
+  min-height: 24px;
+  align-items: center;
 }
 
 .highlight-dots button,
@@ -437,11 +451,15 @@ body.modal-open {
 
 @media (max-width: 980px) {
   .proof-showcase {
-    grid-template-columns: 1fr 1.12fr;
+    grid-template-columns: 1fr;
   }
 
   .review-card-live.compact {
     display: none;
+  }
+
+  .review-cards-row {
+    grid-template-columns: 1fr;
   }
 }
 

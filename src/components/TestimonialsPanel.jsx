@@ -268,54 +268,59 @@ export default function TestimonialsPanel() {
       </div>
 
       <div className="proof-showcase" aria-label="Customer testimonials and event highlight">
-        <ReviewCard review={activeReview} label="What our clients say" />
+        <div className="highlight-showcase-block">
+          <article className="highlight-card-center">
+            <p className="eyebrow">Event highlights</p>
+            <h3>Moments That Last Forever</h3>
+            <button
+              type="button"
+              className="video-tile-live highlight-open-button"
+              onClick={() => setModalOpen(true)}
+              aria-label="Open Chinmayi Events highlights"
+            >
+              <HighlightPreview highlight={activeHighlight} />
+            </button>
+            <a className="instagram-highlight-link" href={site.instagram} target="_blank" rel="noopener noreferrer">
+              More highlights on Instagram
+            </a>
+          </article>
 
-        <article className="highlight-card-center">
-          <p className="eyebrow">Event highlights</p>
-          <h3>Moments That Last Forever</h3>
-          <button
-            type="button"
-            className="video-tile-live highlight-open-button"
-            onClick={() => setModalOpen(true)}
-            aria-label="Open Chinmayi Events highlights"
-          >
-            <HighlightPreview highlight={activeHighlight} />
-          </button>
-          <a className="instagram-highlight-link" href={site.instagram} target="_blank" rel="noopener noreferrer">
-            More highlights on Instagram
-          </a>
-        </article>
+          {highlights.length > 1 && (
+            <div className="highlight-dots" aria-label="Choose highlight">
+              {highlights.map((item, index) => (
+                <button
+                  key={item._id || item.cloudinaryUrl}
+                  type="button"
+                  className={index === highlightIndex ? 'active' : ''}
+                  onClick={() => setHighlightIndex(index)}
+                  aria-label={`Show highlight ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
 
-        <ReviewCard review={nextReview} label="Google reviews" compact />
+        <div className="reviews-showcase-block">
+          <div className="review-cards-row">
+            <ReviewCard review={activeReview} label="What our clients say" />
+            <ReviewCard review={nextReview} label="Google reviews" compact />
+          </div>
+
+          {visibleReviews.length > 1 && (
+            <div className="review-dots" aria-label="Choose testimonial">
+              {visibleReviews.map((review, index) => (
+                <button
+                  key={review._id}
+                  type="button"
+                  className={index === activeIndex ? 'active' : ''}
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`Show testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-
-      {highlights.length > 1 && (
-        <div className="highlight-dots" aria-label="Choose highlight">
-          {highlights.map((item, index) => (
-            <button
-              key={item._id || item.cloudinaryUrl}
-              type="button"
-              className={index === highlightIndex ? 'active' : ''}
-              onClick={() => setHighlightIndex(index)}
-              aria-label={`Show highlight ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
-
-      {visibleReviews.length > 1 && (
-        <div className="review-dots" aria-label="Choose testimonial">
-          {visibleReviews.map((review, index) => (
-            <button
-              key={review._id}
-              type="button"
-              className={index === activeIndex ? 'active' : ''}
-              onClick={() => setActiveIndex(index)}
-              aria-label={`Show testimonial ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
 
       <form className="review-form" onSubmit={submitReview}>
         <div>

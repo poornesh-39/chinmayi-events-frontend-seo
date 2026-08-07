@@ -1,5 +1,5 @@
 ---
-import { site, whatsappHref } from '../data/site.js';
+import { site } from '../data/site.js';
 
 const pathname = Astro.url.pathname;
 const isActive = (href: string) => {
@@ -35,7 +35,6 @@ const navItems = [
         </a>
       ))}
     </nav>
-    <a class="nav-cta" href={whatsappHref()} target="_blank" rel="noopener noreferrer">Get a Quote</a>
   </div>
 </header>
 
@@ -116,17 +115,6 @@ const navItems = [
     transform: scaleX(1);
   }
 
-  .nav-cta {
-    border-radius: 4px;
-    padding: 13px 18px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    color: #24180b;
-    font-size: 0.72rem;
-    font-weight: 950;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
 
   @media (max-width: 980px) {
     nav {
@@ -140,15 +128,8 @@ const navItems = [
     }
 
     .nav {
-      min-height: 72px;
-    }
-
-    .brand span {
-      font-size: 1.16rem;
-    }
-
-    .nav-cta {
-      padding: 11px 12px;
+      min-height: 82px;
+      gap: 20px;
     }
   }
 </style>

@@ -256,6 +256,9 @@
 .quote-items-head span:last-child,
 .quote-item-row > *:last-child { border-right: 0; }
 .quote-item-row { align-items: center; background: #fffdf8; border-top: 1px solid var(--line); }
+.quote-item-row label { display: block; font-weight: inherit; }
+.quote-item-row label span,
+.quote-line-total span { display: none; }
 .quote-item-row input { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: #fff; padding: 9px; }
 .quote-item-row strong { color: var(--maroon-dark); white-space: nowrap; }
 .remove-item-btn { border: 0; border-radius: 6px; background: rgba(156, 29, 42, 0.1) !important; color: #9c1d2a !important; padding: 9px !important; font-size: 0.78rem; }
@@ -273,4 +276,278 @@
   .quote-summary-card { grid-template-columns: 1fr; }
   .quote-title-row,
   .quote-search-row { display: grid; grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .admin-shell,
+  .admin-page {
+    min-height: auto;
+    padding: 96px 12px 40px;
+  }
+
+  .admin-login,
+  .admin-card {
+    border-radius: 7px;
+    padding: 18px;
+  }
+
+  .admin-login {
+    gap: 14px;
+  }
+
+  .admin-login h1,
+  .admin-top h1 {
+    font-size: clamp(1.9rem, 10vw, 2.55rem);
+  }
+
+  .admin-login input,
+  .admin-card input,
+  .admin-card select,
+  .admin-card textarea,
+  .quote-item-row input {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .admin-login button,
+  .admin-card button,
+  .admin-tabs button,
+  .quote-title-row button,
+  .quote-search-row button,
+  .quote-summary-card button {
+    min-height: 48px;
+    width: 100%;
+  }
+
+  .admin-top {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .admin-top a {
+    justify-self: start;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .admin-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-inline: -12px;
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    background: rgba(251, 247, 239, 0.96);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(10px);
+  }
+
+  .admin-tabs button {
+    padding-inline: 10px;
+  }
+
+  .admin-grid,
+  .quotation-tool {
+    gap: 14px;
+  }
+
+  .media-card {
+    padding: 16px 12px;
+  }
+
+  .media-head {
+    gap: 14px;
+  }
+
+  .media-head h2,
+  .quote-title-row h2,
+  .admin-card h2 {
+    margin-bottom: 6px;
+    font-size: 1.55rem;
+  }
+
+  .media-grid {
+    gap: 12px;
+  }
+
+  .media-grid article {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .media-grid img {
+    height: 100%;
+    min-height: 132px;
+    aspect-ratio: auto;
+  }
+
+  .media-grid div:not(.media-preview):not(.media-actions) {
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .media-grid h3 {
+    font-size: 1rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .media-grid p {
+    margin-bottom: 8px;
+    font-size: 0.84rem;
+  }
+
+  .media-actions {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .media-grid button {
+    min-height: 42px;
+    padding: 9px 10px;
+    font-size: 0.78rem;
+  }
+
+  .highlight-badge {
+    top: 8px;
+    left: 8px;
+    padding: 5px 8px;
+    font-size: 0.6rem;
+  }
+
+  .quote-title-row,
+  .quote-search-row,
+  .quote-form-grid,
+  .quote-summary-card {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-title-row {
+    display: grid;
+    gap: 12px;
+  }
+
+  .edit-pill {
+    width: 100%;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .quote-items-table {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .quote-items-head {
+    display: none;
+  }
+
+  .quote-item-row {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fffdf8;
+    padding: 12px;
+  }
+
+  .quote-item-row > * {
+    border-right: 0;
+    padding: 0;
+  }
+
+  .quote-item-row label:first-child,
+  .quote-line-total,
+  .remove-item-btn {
+    grid-column: 1 / -1;
+  }
+
+  .quote-item-row label {
+    display: grid;
+    gap: 6px;
+  }
+
+  .quote-item-row label span,
+  .quote-line-total span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .quote-line-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px dashed var(--line);
+    padding-top: 12px;
+  }
+
+  .quote-line-total strong {
+    font-size: 1.05rem;
+  }
+
+  .remove-item-btn {
+    min-height: 42px !important;
+  }
+
+  .quote-summary-card {
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    margin-inline: -12px;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 8px 8px 0 0;
+    padding: 16px 12px calc(16px + env(safe-area-inset-bottom));
+  }
+
+  .quote-summary-card div {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .quote-summary-card .grand-total strong {
+    font-size: 1.65rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-shell,
+  .admin-page {
+    padding-inline: 10px;
+  }
+
+  .admin-card {
+    padding: 16px;
+  }
+
+  .media-card {
+    padding-inline: 10px;
+  }
+
+  .media-grid article {
+    grid-template-columns: 86px minmax(0, 1fr);
+  }
+
+  .media-grid img {
+    min-height: 148px;
+  }
+
+  .quote-item-row {
+    grid-template-columns: 1fr;
+  }
 }

@@ -28,8 +28,12 @@ import { site, whatsappHref } from '../data/site.js';
     }
 
     .sticky-actions a {
-      padding: 14px 8px;
+      min-height: 56px;
+      display: grid;
+      place-items: center;
+      padding: 13px 8px calc(13px + env(safe-area-inset-bottom) / 2);
       text-align: center;
+      font-size: 0.82rem;
       font-weight: 850;
       color: var(--maroon-dark);
     }

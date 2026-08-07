@@ -172,19 +172,58 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
 
   @media (max-width: 760px) {
     .hero {
-      min-height: 680px;
-      height: auto;
+      min-height: min(690px, 100svh);
+      height: 100svh;
       align-items: end;
+    }
+
+    .hero-media img {
+      object-position: 58% center;
     }
 
     .hero-shade {
       background:
-        linear-gradient(0deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.18)),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.22));
+        linear-gradient(0deg, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.52) 48%, rgba(0, 0, 0, 0.18)),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.18));
     }
 
     .hero-content {
-      padding: 150px 0 96px;
+      width: min(100% - 28px, 1180px);
+      padding: 92px 0 98px;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-top: 14px;
+      font-size: clamp(3rem, 15vw, 4.35rem);
+      line-height: 0.98;
+    }
+
+    .signature {
+      margin-bottom: 14px;
+      font-size: clamp(2rem, 10vw, 2.85rem);
+    }
+
+    .hero-copy {
+      max-width: 34ch;
+      margin-bottom: 22px;
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: min(100%, 360px);
+    }
+
+    .btn-row .button {
+      min-height: 46px;
+      padding-inline: 9px;
+      font-size: 0.68rem;
+      letter-spacing: 0.035em;
+      white-space: nowrap;
     }
 
     .social-rail {
@@ -196,8 +235,37 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
       transform: translateX(-50%);
     }
 
+    .social-icon {
+      width: 42px;
+      height: 42px;
+    }
+
     .hero-bottom {
       display: none;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .hero-content {
+      padding-top: 84px;
+      padding-bottom: 92px;
+    }
+
+    h1 {
+      font-size: clamp(2.78rem, 14.5vw, 3.55rem);
+    }
+
+    .hero-copy {
+      font-size: 0.92rem;
+    }
+
+    .btn-row {
+      gap: 7px;
+    }
+
+    .btn-row .button {
+      font-size: 0.62rem;
+      padding-inline: 7px;
     }
   }
 </style>
