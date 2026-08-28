@@ -47,7 +47,7 @@ const initialForm = {
   experience: ''
 };
 
-const stars = (rating) => Array.from({ length: Math.max(1, Math.min(5, Number(rating) || 1)) }, () => '*').join(' ');
+const stars = (rating) => Array.from({ length: Math.max(1, Math.min(5, Number(rating) || 1)) }, () => '★').join(' ');
 
 const videoThumb = (url) => {
   if (!url || !url.includes('cloudinary')) return url;
@@ -262,7 +262,7 @@ export default function TestimonialsPanel() {
         </div>
         <div className="rating-summary">
           <strong>{averageRating}</strong>
-          <span>* * * * *</span>
+          <span>★ ★ ★ ★ ★</span>
           <small>Customer rating</small>
         </div>
       </div>
@@ -341,14 +341,24 @@ export default function TestimonialsPanel() {
               ))}
             </select>
           </label>
-          <label>
+          <div className="rating-field">
             <span>Rating</span>
-            <select name="rating" value={form.rating} onChange={updateForm} required>
-              {[5, 4, 3, 2, 1].map((rating) => (
-                <option key={rating} value={rating}>{rating} Star{rating === 1 ? '' : 's'}</option>
+            <div className="star-rating" role="radiogroup" aria-label="Rating">
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <button
+                  key={rating}
+                  type="button"
+                  className={rating <= Number(form.rating) ? 'active' : ''}
+                  role="radio"
+                  aria-checked={rating === Number(form.rating)}
+                  aria-label={`${rating} star${rating === 1 ? '' : 's'}`}
+                  onClick={() => setForm((current) => ({ ...current, rating }))}
+                >
+                  ★
+                </button>
               ))}
-            </select>
-          </label>
+            </div>
+          </div>
         </div>
         <label>
           <span>Review</span>
@@ -361,7 +371,7 @@ export default function TestimonialsPanel() {
             placeholder="Tell future customers about your event decoration experience..."
           />
         </label>
-        <button type="submit" disabled={submitting}>
+        <button className="submit-review-button" type="submit" disabled={submitting}>
           {submitting ? 'Submitting...' : 'Submit Review'}
         </button>
         {message && <p className="review-message">{message}</p>}
@@ -410,5 +420,3 @@ export default function TestimonialsPanel() {
     </div>
   );
 }
-
-

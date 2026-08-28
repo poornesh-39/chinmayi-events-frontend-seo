@@ -7,6 +7,7 @@
     padding: 24px;
     background: #fff;
     box-shadow: var(--shadow);
+    font-family: "Avenir Next", "Trebuchet MS", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
   .form-grid {
@@ -19,7 +20,15 @@
     display: grid;
     gap: 7px;
     color: var(--ink);
-    font-weight: 800;
+  }
+
+  .lead-form label > span {
+    color: var(--maroon-dark);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
   }
 
   .lead-form input,
@@ -31,6 +40,17 @@
     padding: 12px 13px;
     background: #fffdf8;
     color: var(--ink);
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.45;
+  }
+
+  .lead-form input::placeholder,
+  .lead-form textarea::placeholder {
+    color: rgba(107, 98, 92, 0.72);
+    font-weight: 500;
   }
 
   .lead-form textarea {
@@ -185,4 +205,3 @@
     }
   }
 </style>
-

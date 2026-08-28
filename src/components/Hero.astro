@@ -174,7 +174,7 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
     .hero {
       min-height: min(690px, 100svh);
       height: 100svh;
-      align-items: end;
+      align-items: center;
     }
 
     .hero-media img {
@@ -189,7 +189,8 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
 
     .hero-content {
       width: min(100% - 28px, 1180px);
-      padding: 92px 0 98px;
+      padding: 0 0 86px;
+      transform: translateY(clamp(18px, 4.5svh, 48px));
     }
 
     h1 {
@@ -247,8 +248,8 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
 
   @media (max-width: 390px) {
     .hero-content {
-      padding-top: 84px;
-      padding-bottom: 92px;
+      padding-bottom: 80px;
+      transform: translateY(clamp(14px, 3.5svh, 34px));
     }
 
     h1 {
@@ -269,4 +270,3 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
     }
   }
 </style>
-

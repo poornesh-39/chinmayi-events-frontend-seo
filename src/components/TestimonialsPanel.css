@@ -261,6 +261,7 @@
     linear-gradient(135deg, rgba(255, 253, 248, 0.98), rgba(251, 247, 239, 0.98)),
     radial-gradient(circle at 100% 0, rgba(217, 173, 82, 0.24), transparent 30%);
   padding: 24px;
+  font-family: "Avenir Next", "Trebuchet MS", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .review-form h3 {
@@ -275,11 +276,21 @@
   gap: 14px;
 }
 
-.review-form label {
+.review-form label,
+.rating-field {
   display: grid;
   gap: 7px;
   color: var(--ink);
-  font-weight: 850;
+}
+
+.review-form label > span,
+.rating-field > span {
+  color: var(--maroon-dark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .review-form input,
@@ -290,13 +301,64 @@
   border-radius: 5px;
   background: #fff;
   padding: 12px 13px;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+
+.review-form input::placeholder,
+.review-form textarea::placeholder {
+  color: rgba(107, 98, 92, 0.72);
+  font-weight: 500;
 }
 
 .review-form textarea {
   resize: vertical;
 }
 
-.review-form button {
+.star-rating {
+  display: inline-flex;
+  width: fit-content;
+  gap: 5px;
+  border: 1px solid rgba(217, 173, 82, 0.34);
+  border-radius: 999px;
+  background: #fffdf8;
+  padding: 7px 10px;
+}
+
+.star-rating button {
+  width: 31px;
+  height: 31px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(111, 24, 50, 0.24);
+  cursor: pointer;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  line-height: 1;
+  padding: 0;
+  transition: color 140ms ease, transform 140ms ease, background 140ms ease;
+}
+
+.star-rating button:hover,
+.star-rating button.active {
+  color: var(--gold-dark);
+}
+
+.star-rating button:focus-visible {
+  outline: 2px solid var(--maroon);
+  outline-offset: 2px;
+}
+
+.star-rating button:hover {
+  transform: translateY(-1px);
+}
+
+.review-form .submit-review-button {
   justify-self: start;
   border: 0;
   border-radius: 4px;
@@ -310,7 +372,7 @@
   cursor: pointer;
 }
 
-.review-form button:disabled {
+.review-form .submit-review-button:disabled {
   opacity: 0.7;
   cursor: wait;
 }
@@ -470,8 +532,13 @@ body.modal-open {
   }
 
   .rating-summary,
-  .review-form button {
+  .review-form .submit-review-button {
     width: 100%;
+  }
+
+  .star-rating {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
