@@ -39,6 +39,53 @@ export const whatsappHref = (message =
 export const gmailHref = (subject = 'Event decoration enquiry') =>
   `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}&su=${encodeURIComponent(subject)}`;
 
+/**
+ * Single source of truth for event categories. Order here drives the gallery
+ * filter order and the option order in every form.
+ */
+export const eventTypes = [
+  ['wedding', 'Wedding'],
+  ['reception', 'Reception'],
+  ['engagement', 'Engagement'],
+  ['haldi(pre-wedding)', 'Haldi (Pre-Wedding)'],
+  ['housewarming', 'Housewarming'],
+  ['outdoor', 'Outdoor Events'],
+  ['vehicle', 'Vehicle Decoration'],
+  ['birthday', 'Birthday'],
+  ['naming-ceremony', 'Naming Ceremony'],
+  ['corporate', 'Corporate'],
+  ['other', 'Other']
+];
+
+export const categoryOrder = ['all', ...eventTypes.map(([value]) => value)];
+
+export const categoryLabels = {
+  all: 'All',
+  ...Object.fromEntries(eventTypes)
+};
+
+export const normalizeCategory = (value) =>
+  String(value || 'other').trim().toLowerCase();
+
+export const labelForCategory = (category) =>
+  categoryLabels[category] ||
+  String(category).replace(/[-_]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+
+/** Adds Cloudinary auto format/quality so mobile gets WebP/AVIF at the right size. */
+export const cloudinaryImage = (url, width) => {
+  if (!url || !url.includes('cloudinary')) return url;
+  const transform = width ? `c_limit,w_${width},q_auto,f_auto` : 'q_auto,f_auto';
+  return url.replace('/upload/', `/upload/${transform}/`);
+};
+
+/** Derives a poster frame from a Cloudinary video URL. */
+export const cloudinaryVideoThumb = (url, width = 720) => {
+  if (!url || !url.includes('cloudinary')) return url;
+  return url
+    .replace('/upload/', `/upload/c_fill,w_${width},h_${Math.round((width * 2) / 3)},q_auto,f_auto/`)
+    .replace(/\.(mp4|webm|mov)$/i, '.jpg');
+};
+
 export const services = [
   {
     slug: 'wedding-decoration-chikkamagaluru',

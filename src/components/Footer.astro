@@ -6,7 +6,15 @@ import { site, services, whatsappHref, gmailHref } from '../data/site.js';
   <div class="container footer-grid">
     <div>
       <a class="footer-brand" href="/">
-        <img src={site.logo} alt="Chinmayi Events logo" width="58" height="58" />
+        <img
+        src="/images/opt/chinmayi-events-logo-128.webp"
+        srcset="/images/opt/chinmayi-events-logo-128.webp 128w, /images/opt/chinmayi-events-logo-256.webp 256w"
+        sizes="58px"
+        alt="Chinmayi Events logo"
+        width="58"
+        height="58"
+        loading="lazy"
+      />
         <span>Chinmayi Events</span>
       </a>
       <p>Turning your dreams into beautiful celebrations across Karnataka.</p>

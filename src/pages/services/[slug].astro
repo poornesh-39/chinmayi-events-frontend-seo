@@ -4,6 +4,7 @@ import GalleryPreview from '../../components/GalleryPreview.astro';
 import ContactForm from '../../components/ContactForm.jsx';
 import IslandStyles from '../../components/IslandStyles.astro';
 import { services, site, siteUrl, whatsappHref } from '../../data/site.js';
+import { heroBackground } from '../../data/images.js';
 
 export function getStaticPaths() {
   return services.map((service) => ({
@@ -54,7 +55,7 @@ const breadcrumbSchema = {
   jsonLd={[schema, breadcrumbSchema]}
 >
   <IslandStyles />
-  <section class="interior-hero" style={`--page-hero-image: url('${service.image}')`}>
+  <section class="interior-hero" style={`--page-hero-image: url('${heroBackground(service.image)}')`}>
     <div class="container">
       <p class="eyebrow">Chinmayi Events</p>
       <h1>{service.title}</h1>
@@ -143,7 +144,7 @@ const breadcrumbSchema = {
   .service-process {
     background:
       linear-gradient(rgba(8, 7, 6, 0.9), rgba(8, 7, 6, 0.92)),
-      url('/images/chikkamagaluru-gallery-night-stage-10.jpeg') center/cover;
+      url('/images/opt/chikkamagaluru-gallery-night-stage-10-1200.webp') center/cover;
   }
 
   .service-steps {

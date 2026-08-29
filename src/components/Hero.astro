@@ -1,19 +1,20 @@
 ---
 import { site, whatsappHref, gmailHref } from '../data/site.js';
+import SmartImage from './SmartImage.astro';
 ---
 
 <section class="hero">
-  <picture class="hero-media">
-    <img
+  <div class="hero-media">
+    <SmartImage
       src={site.heroImage}
       alt="Premium wedding stage decoration by Chinmayi Events in Chikkamagaluru"
       width="1600"
-      height="1000"
+      height="2400"
+      sizes="100vw"
       loading="eager"
-      decoding="async"
       fetchpriority="high"
     />
-  </picture>
+  </div>
   <div class="hero-shade"></div>
   <div class="container hero-content">
     <p class="eyebrow">We create, you celebrate</p>
@@ -69,10 +70,12 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
     inset: 0;
   }
 
-  .hero-media img {
+  .hero-media :global(picture),
+  .hero-media :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
   .hero-shade {
@@ -171,13 +174,16 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
   }
 
   @media (max-width: 760px) {
+    /* Match the interior-page hero proportions instead of filling the viewport,
+       so the services and CTAs sit closer to the fold. */
     .hero {
-      min-height: min(690px, 100svh);
-      height: 100svh;
-      align-items: center;
+      min-height: 520px;
+      height: auto;
+      align-items: end;
+      padding: 128px 0 76px;
     }
 
-    .hero-media img {
+    .hero-media :global(img) {
       object-position: 58% center;
     }
 
@@ -189,8 +195,8 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
 
     .hero-content {
       width: min(100% - 28px, 1180px);
-      padding: 0 0 86px;
-      transform: translateY(clamp(18px, 4.5svh, 48px));
+      padding: 0;
+      transform: none;
     }
 
     h1 {
@@ -231,7 +237,7 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
       right: auto;
       left: 50%;
       top: auto;
-      bottom: 24px;
+      bottom: 18px;
       grid-auto-flow: column;
       transform: translateX(-50%);
     }
@@ -247,9 +253,9 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
   }
 
   @media (max-width: 390px) {
-    .hero-content {
-      padding-bottom: 80px;
-      transform: translateY(clamp(14px, 3.5svh, 34px));
+    .hero {
+      min-height: 470px;
+      padding: 116px 0 72px;
     }
 
     h1 {

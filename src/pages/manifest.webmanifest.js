@@ -12,9 +12,16 @@ export function GET() {
       theme_color: '#6e1f2f',
       icons: [
         {
-          src: '/images/chinmayi-events-logo.jpeg',
+          src: '/images/opt/chinmayi-events-logo-192.png',
+          sizes: '192x192',
+          type: 'image/png',
+          purpose: 'any'
+        },
+        {
+          src: '/images/opt/chinmayi-events-logo-512.png',
           sizes: '512x512',
-          type: 'image/jpeg'
+          type: 'image/png',
+          purpose: 'any'
         }
       ]
     }),

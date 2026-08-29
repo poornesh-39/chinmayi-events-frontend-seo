@@ -1,5 +1,6 @@
 ---
 import { services } from '../data/site.js';
+import SmartImage from './SmartImage.astro';
 
 const { limit } = Astro.props;
 const visible = limit ? services.slice(0, limit) : services;
@@ -9,7 +10,14 @@ const visible = limit ? services.slice(0, limit) : services;
   {visible.map((service) => (
     <article class="service-card">
       <a href={`/services/${service.slug}/`} aria-label={`Learn more about ${service.title}`}>
-        <img src={service.image} alt={`${service.shortTitle} by Chinmayi Events`} loading="lazy" width="720" height="520" />
+        <SmartImage
+          src={service.image}
+          alt={`${service.shortTitle} by Chinmayi Events`}
+          sizes="(max-width: 620px) 100vw, (max-width: 920px) 50vw, 33vw"
+          widths={[400, 800, 1200]}
+          width="720"
+          height="520"
+        />
         <div class="service-body">
           <h3>{service.shortTitle}</h3>
           <p>{service.description}</p>
@@ -35,10 +43,20 @@ const visible = limit ? services.slice(0, limit) : services;
     box-shadow: 0 16px 44px rgba(38, 23, 15, 0.07);
   }
 
-  .service-card img {
+  .service-card :global(img) {
     width: 100%;
     aspect-ratio: 1.28;
     object-fit: cover;
+    transition: transform 260ms ease;
+  }
+
+  .service-card a {
+    display: block;
+    overflow: hidden;
+  }
+
+  .service-card:hover :global(img) {
+    transform: scale(1.04);
   }
 
   .service-body {
@@ -69,10 +87,32 @@ const visible = limit ? services.slice(0, limit) : services;
   @media (max-width: 620px) {
     .service-grid {
       grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .service-card :global(img) {
+      aspect-ratio: 1.6;
+    }
+
+    .service-body {
+      padding: 18px;
+    }
+
+    h3 {
+      font-size: 1.28rem;
     }
 
     p {
       min-height: 0;
+      font-size: 0.94rem;
+    }
+
+    /* Give the whole card an obvious tap affordance on touch devices. */
+    span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      margin-top: 4px;
     }
   }
 </style>

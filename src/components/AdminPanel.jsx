@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../data/site.js';
+import { apiUrl, cloudinaryVideoThumb, eventTypes } from '../data/site.js';
 import QuotationTool from './QuotationTool.jsx';
 import './AdminPanel.css';
 
@@ -8,26 +8,9 @@ const credentials = {
   password: 'admin123'
 };
 
-const categories = [
-  ['wedding', 'Wedding'],
-  ['birthday', 'Birthday'],
-  ['engagement', 'Engagement'],
-  ['reception', 'Reception'],
-  ['haldi(pre-wedding)', 'Haldi (Pre-Wedding)'],
-  ['naming-ceremony', 'Naming Ceremony'],
-  ['housewarming', 'Housewarming'],
-  ['outdoor', 'Outdoor Events'],
-  ['vehicle', 'Vehicle Decoration'],
-  ['corporate', 'Corporate'],
-  ['other', 'Other']
-];
+const categories = eventTypes;
 
-const videoThumb = (url) => {
-  if (!url || !url.includes('cloudinary')) return url;
-  return url
-    .replace('/upload/', '/upload/c_fill,w_720,h_480,q_auto,f_auto/')
-    .replace(/\.(mp4|webm)$/i, '.jpg');
-};
+const videoThumb = (url) => cloudinaryVideoThumb(url, 720);
 
 export default function AdminPanel() {
   const [loggedIn, setLoggedIn] = useState(false);

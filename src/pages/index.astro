@@ -4,6 +4,7 @@ import Hero from '../components/Hero.astro';
 import ContactForm from '../components/ContactForm.jsx';
 import TestimonialsPanel from '../components/TestimonialsPanel.jsx';
 import IslandStyles from '../components/IslandStyles.astro';
+import SmartImage from '../components/SmartImage.astro';
 import { faqs, site, siteUrl, whatsappHref } from '../data/site.js';
 
 const localBusinessSchema = {
@@ -160,7 +161,14 @@ const instagramImages = galleryItems.slice(1, 7);
       <div class="service-strip">
         {signatureServices.map((service) => (
           <a href="/services/" class="service-tile">
-            <img src={service.image} alt={service.alt} loading="lazy" width="320" height="260" />
+            <SmartImage
+              src={service.image}
+              alt={service.alt}
+              sizes="(max-width: 620px) 45vw, (max-width: 980px) 30vw, 320px"
+              widths={[400, 800]}
+              width="320"
+              height="260"
+            />
             <strong>{service.label}</strong>
           </a>
         ))}
@@ -176,7 +184,13 @@ const instagramImages = galleryItems.slice(1, 7);
       <div class="masonry-gallery">
         {galleryItems.map((src, index) => (
           <figure class:list={[index === 0 || index === 3 ? 'tall' : '', index === 2 || index === 7 ? 'wide' : '']}>
-            <img src={src} alt={`Chinmayi Events decoration portfolio ${index + 1} in Chikkamagaluru`} loading={index < 3 ? 'eager' : 'lazy'} />
+            <SmartImage
+              src={src}
+              alt={`Chinmayi Events decoration portfolio ${index + 1} in Chikkamagaluru`}
+              sizes="(max-width: 620px) 50vw, (max-width: 980px) 33vw, 25vw"
+              widths={[400, 800, 1200]}
+              loading={index < 2 ? 'eager' : 'lazy'}
+            />
           </figure>
         ))}
       </div>
@@ -233,7 +247,12 @@ const instagramImages = galleryItems.slice(1, 7);
       <h2><a href={site.instagram} target="_blank" rel="noopener noreferrer">@chinmayi_events</a></h2>
       <div class="instagram-row">
         {instagramImages.map((src, index) => (
-          <img src={src} alt={`Instagram decoration preview ${index + 1} from Chinmayi Events`} loading="lazy" />
+          <SmartImage
+            src={src}
+            alt={`Instagram decoration preview ${index + 1} from Chinmayi Events`}
+            sizes="(max-width: 620px) 33vw, 16vw"
+            widths={[400, 800]}
+          />
         ))}
       </div>
     </div>
@@ -308,7 +327,7 @@ const instagramImages = galleryItems.slice(1, 7);
     background: linear-gradient(180deg, rgba(28, 15, 11, 0.08), rgba(28, 15, 11, 0.88));
   }
 
-  .service-tile img {
+  .service-tile :global(img) {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -317,7 +336,7 @@ const instagramImages = galleryItems.slice(1, 7);
     transition: transform 220ms ease;
   }
 
-  .service-tile:hover img {
+  .service-tile:hover :global(img) {
     transform: scale(1.045);
   }
 
@@ -356,14 +375,14 @@ const instagramImages = galleryItems.slice(1, 7);
     grid-column: span 2;
   }
 
-  .masonry-gallery img {
+  .masonry-gallery :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 220ms ease;
   }
 
-  .masonry-gallery figure:hover img {
+  .masonry-gallery figure:hover :global(img) {
     transform: scale(1.04);
   }
 
@@ -374,7 +393,7 @@ const instagramImages = galleryItems.slice(1, 7);
   .why-section {
     background:
       linear-gradient(rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0.86)),
-      url('/images/chikkamagaluru-gallery-stage-lighting-8.jpeg') center/cover;
+      url('/images/opt/chikkamagaluru-gallery-stage-lighting-8-800.webp') center/cover;
   }
 
   .why-section .section-title,
@@ -493,7 +512,7 @@ const instagramImages = galleryItems.slice(1, 7);
     margin-top: 30px;
   }
 
-  .instagram-row img {
+  .instagram-row :global(img) {
     width: 100%;
     aspect-ratio: 1.3;
     object-fit: cover;
@@ -693,7 +712,7 @@ const instagramImages = galleryItems.slice(1, 7);
       margin-top: 22px;
     }
 
-    .instagram-row img {
+    .instagram-row :global(img) {
       aspect-ratio: 1;
     }
 
