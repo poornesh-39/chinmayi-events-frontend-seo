@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { apiUrl, site } from '../data/site.js';
+import { apiUrl, cloudinaryVideoThumb, eventTypes, site } from '../data/site.js';
 import './TestimonialsPanel.css';
 
 const fallbackReviews = [
@@ -24,21 +24,9 @@ const fallbackReviews = [
 const fallbackHighlight = {
   _id: 'fallback-highlight',
   title: 'Wedding event highlight decoration by Chinmayi Events',
-  cloudinaryUrl: '/images/chikkamagaluru-gallery-night-stage-10.jpeg',
+  cloudinaryUrl: '/images/opt/chikkamagaluru-gallery-night-stage-10-800.webp',
   mediaType: 'image'
 };
-
-const eventTypes = [
-  ['wedding', 'Wedding'],
-  ['birthday', 'Birthday'],
-  ['engagement', 'Engagement'],
-  ['reception', 'Reception'],
-  ['housewarming', 'Housewarming'],
-  ['haldi(pre-wedding)', 'Haldi (Pre-Wedding)'],
-  ['naming-ceremony', 'Naming Ceremony'],
-  ['corporate', 'Corporate'],
-  ['other', 'Other']
-];
 
 const initialForm = {
   fullName: '',
@@ -49,12 +37,7 @@ const initialForm = {
 
 const stars = (rating) => Array.from({ length: Math.max(1, Math.min(5, Number(rating) || 1)) }, () => '★').join(' ');
 
-const videoThumb = (url) => {
-  if (!url || !url.includes('cloudinary')) return url;
-  return url
-    .replace('/upload/', '/upload/c_fill,w_960,h_640,q_auto,f_auto/')
-    .replace(/\.(mp4|webm)$/i, '.jpg');
-};
+const videoThumb = (url) => cloudinaryVideoThumb(url, 960);
 
 const getMediaSrc = (highlight) => highlight?.cloudinaryUrl || fallbackHighlight.cloudinaryUrl;
 const getMediaTitle = (highlight) => highlight?.title || fallbackHighlight.title;

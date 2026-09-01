@@ -31,6 +31,28 @@
     text-transform: uppercase;
   }
 
+  .lead-form label > span i {
+    color: var(--muted);
+    font-style: normal;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .form-alt {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    text-align: center;
+  }
+
+  .form-alt a {
+    color: var(--maroon);
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   .lead-form input,
   .lead-form select,
   .lead-form textarea {
@@ -75,6 +97,11 @@
   .status {
     margin: 0;
     font-weight: 750;
+  }
+
+  /* The status paragraph is always rendered for aria-live, so hide it when idle. */
+  .status:empty {
+    display: none;
   }
 
   .status.success {

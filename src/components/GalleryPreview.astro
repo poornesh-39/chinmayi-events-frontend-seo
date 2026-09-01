@@ -1,5 +1,6 @@
 ---
 import { galleryHighlights } from '../data/site.js';
+import SmartImage from './SmartImage.astro';
 
 const { compact = false } = Astro.props;
 const highlights = compact ? galleryHighlights.slice(0, 4) : galleryHighlights;
@@ -8,7 +9,15 @@ const highlights = compact ? galleryHighlights.slice(0, 4) : galleryHighlights;
 <div class="gallery-grid">
   {highlights.map((item, index) => (
     <figure class:list={['gallery-item', index === 0 && !compact ? 'featured' : '']}>
-      <img src={item.src} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} width="800" height="620" />
+      <SmartImage
+        src={item.src}
+        alt={item.alt}
+        sizes="(max-width: 560px) 50vw, (max-width: 860px) 50vw, 25vw"
+        widths={[400, 800, 1200]}
+        width="800"
+        height="620"
+        loading={index === 0 ? 'eager' : 'lazy'}
+      />
       <figcaption>{item.title}</figcaption>
     </figure>
   ))}
@@ -35,14 +44,20 @@ const highlights = compact ? galleryHighlights.slice(0, 4) : galleryHighlights;
     grid-row: span 2;
   }
 
-  img {
+  .gallery-item :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery-item :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 220ms ease;
   }
 
-  .gallery-item:hover img {
+  .gallery-item:hover :global(img) {
     transform: scale(1.035);
   }
 
@@ -68,13 +83,30 @@ const highlights = compact ? galleryHighlights.slice(0, 4) : galleryHighlights;
     }
   }
 
+  /* Keep two columns on phones — a decoration business should show more work,
+     not less, and a single stacked column buries everything below the fold. */
   @media (max-width: 560px) {
     .gallery-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .gallery-item {
+      min-height: 0;
+      aspect-ratio: 1;
     }
 
     .featured {
-      grid-column: span 1;
+      grid-column: span 2;
+      aspect-ratio: 1.4;
+    }
+
+    figcaption {
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      padding: 7px 9px;
+      font-size: 0.82rem;
     }
   }
 </style>

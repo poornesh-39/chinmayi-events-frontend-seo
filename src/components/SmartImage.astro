@@ -1,0 +1,40 @@
+---
+/**
+ * Responsive <picture> backed by the derivatives in /images/opt/.
+ * Serves WebP with a JPEG fallback so phones download roughly a tenth
+ * of what the original files weigh.
+ */
+import { responsiveImage } from '../data/images.js';
+
+const {
+  src,
+  alt,
+  widths,
+  sizes = '100vw',
+  loading = 'lazy',
+  fetchpriority,
+  decoding = 'async',
+  width,
+  height,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const { src: fallbackSrc, webpSrcSet, jpegSrcSet } = responsiveImage(src, widths);
+---
+
+<picture>
+  {webpSrcSet && <source type="image/webp" srcset={webpSrcSet} sizes={sizes} />}
+  {jpegSrcSet && <source type="image/jpeg" srcset={jpegSrcSet} sizes={sizes} />}
+  <img
+    src={fallbackSrc}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    fetchpriority={fetchpriority}
+    decoding={decoding}
+    class={className}
+    {...rest}
+  />
+</picture>

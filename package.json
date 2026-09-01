@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 0.0.0.0",
-    "build": "astro check && astro build",
+    "images": "node scripts/optimize-images.mjs",
+    "check:env": "node scripts/check-env.mjs",
+    "build": "npm run check:env && npm run images && astro check && astro build",
     "preview": "astro preview --host 0.0.0.0"
   },
   "dependencies": {

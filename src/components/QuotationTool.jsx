@@ -1,17 +1,5 @@
 import { useMemo, useState } from 'react';
-import { apiUrl } from '../data/site.js';
-
-const eventTypes = [
-  ['wedding', 'Wedding'],
-  ['birthday', 'Birthday'],
-  ['engagement', 'Engagement'],
-  ['reception', 'Reception'],
-  ['haldi(pre-wedding)', 'Haldi (Pre-Wedding)'],
-  ['naming-ceremony', 'Naming Ceremony'],
-  ['housewarming', 'Housewarming'],
-  ['corporate', 'Corporate'],
-  ['other', 'Other']
-];
+import { apiUrl, eventTypes } from '../data/site.js';
 
 const createItem = (id) => ({
   id,

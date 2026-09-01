@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { apiUrl, services } from '../data/site.js';
+import { apiUrl, eventTypes, services, whatsappHref } from '../data/site.js';
 
 const initialState = {
   name: '',
@@ -8,18 +8,6 @@ const initialState = {
   eventType: '',
   message: ''
 };
-
-const eventTypes = [
-  ['wedding', 'Wedding'],
-  ['birthday', 'Birthday'],
-  ['engagement', 'Engagement'],
-  ['reception', 'Reception'],
-  ['housewarming', 'Housewarming'],
-  ['haldi(pre-wedding)', 'Haldi (Pre-Wedding)'],
-  ['naming-ceremony', 'Naming Ceremony'],
-  ['corporate', 'Corporate'],
-  ['other', 'Other']
-];
 
 export default function ContactForm() {
   const [form, setForm] = useState(initialState);
@@ -64,16 +52,42 @@ export default function ContactForm() {
       <div className="form-grid">
         <label>
           <span>Name</span>
-          <input name="name" value={form.name} onChange={onChange} required placeholder="Your name" />
+          <input
+            name="name"
+            value={form.name}
+            onChange={onChange}
+            required
+            autoComplete="name"
+            placeholder="Your name"
+          />
         </label>
         <label>
           <span>Phone</span>
-          <input name="phone" value={form.phone} onChange={onChange} required placeholder="Mobile number" />
+          <input
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            pattern="[0-9+\-\s()]{10,15}"
+            title="Enter a valid mobile number"
+            value={form.phone}
+            onChange={onChange}
+            required
+            placeholder="Mobile number"
+          />
         </label>
       </div>
       <label>
-        <span>Email</span>
-        <input name="email" type="email" value={form.email} onChange={onChange} required placeholder="Email address" />
+        <span>Email <i>(optional)</i></span>
+        <input
+          name="email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          value={form.email}
+          onChange={onChange}
+          placeholder="Email address"
+        />
       </label>
       <label>
         <span>Event type</span>
@@ -85,20 +99,27 @@ export default function ContactForm() {
         </select>
       </label>
       <label>
-        <span>Event details</span>
+        <span>Event details <i>(optional)</i></span>
         <textarea
           name="message"
           value={form.message}
           onChange={onChange}
-          required
-          rows={5}
+          rows={3}
           placeholder={`Example: ${services[0].shortTitle}, event date, venue, guest count and preferred theme`}
         />
       </label>
       <button type="submit" disabled={status.type === 'loading'}>
         {status.type === 'loading' ? 'Sending...' : 'Request Event Quote'}
       </button>
-      {status.message && <p className={`status ${status.type}`}>{status.message}</p>}
+      <p className="form-alt">
+        Prefer to chat?{' '}
+        <a href={whatsappHref()} target="_blank" rel="noopener noreferrer">
+          Message us on WhatsApp
+        </a>
+      </p>
+      <p className={`status ${status.type}`} role="status" aria-live="polite">
+        {status.message}
+      </p>
     </form>
   );
 }

@@ -1,46 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { apiUrl } from '../data/site.js';
-
-const categoryOrder = [
-  'all',
-  'wedding',
-  'reception',
-  'engagement',
-  'haldi(pre-wedding)',
-  'housewarming',
-  'outdoor',
-  'vehicle',
-  'birthday',
-  'naming-ceremony',
-  'corporate',
-  'other'
-];
-
-const categoryLabels = {
-  all: 'All',
-  wedding: 'Wedding',
-  reception: 'Reception',
-  engagement: 'Engagement',
-  'haldi(pre-wedding)': 'Pre-Wedding',
-  housewarming: 'House Warming',
-  outdoor: 'Outdoor',
-  vehicle: 'Vehicle',
-  birthday: 'Birthday',
-  'naming-ceremony': 'Naming Ceremony',
-  corporate: 'Corporate',
-  other: 'Other'
-};
-
-const normalizeCategory = (value) => String(value || 'other').trim().toLowerCase();
-
-const labelForCategory = (category) =>
-  categoryLabels[category] || category.replace(/[-_]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
-
-const imageFor = (item) => {
-  const url = item?.cloudinaryUrl || '';
-  if (!url || !url.includes('cloudinary')) return url;
-  return url.replace('/upload/', '/upload/q_auto,f_auto/');
-};
+import {
+  apiUrl,
+  categoryOrder,
+  cloudinaryImage,
+  cloudinaryVideoThumb,
+  labelForCategory,
+  normalizeCategory
+} from '../data/site.js';
 
 export default function LiveGallery() {
   const [items, setItems] = useState([]);
@@ -48,9 +14,13 @@ export default function LiveGallery() {
   const [activeCategory, setActiveCategory] = useState('all');
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/gallery/admin/all`)
+    const controller = new AbortController();
+
+    // TODO: switch to a dedicated public endpoint once the backend adds one —
+    // this admin route should not be readable without auth.
+    fetch(`${apiUrl}/api/gallery/admin/all`, { signal: controller.signal })
       .then((response) => {
-        if (!response.ok) throw new Error('Gallery unavailable');
+        if (!response.ok) throw new Error(`Gallery unavailable (${response.status})`);
         return response.json();
       })
       .then((data) => {
@@ -67,7 +37,13 @@ export default function LiveGallery() {
         setItems(sortedItems);
         setState('ready');
       })
-      .catch(() => setState('error'));
+      .catch((error) => {
+        if (error.name === 'AbortError') return;
+        console.error('Failed to load gallery:', error);
+        setState('error');
+      });
+
+    return () => controller.abort();
   }, []);
 
   const categories = useMemo(() => {
@@ -111,23 +87,30 @@ export default function LiveGallery() {
       <div className="live-gallery">
         {visibleItems.map((item) => {
           const isVideo = item.mediaType === 'video';
-          const mediaUrl = isVideo ? item.cloudinaryUrl : imageFor(item);
+          const url = item.cloudinaryUrl || '';
 
           return (
             <figure key={item._id}>
               {isVideo ? (
                 <video
-                  src={mediaUrl}
+                  src={url}
+                  poster={cloudinaryVideoThumb(url)}
                   aria-label={`${item.title || 'Event video'} by Chinmayi Events`}
-                  autoPlay
                   muted
                   loop
                   playsInline
                   controls
-                  preload="metadata"
+                  preload="none"
                 />
               ) : (
-                <img src={mediaUrl} alt={`${item.title || 'Event decoration'} by Chinmayi Events`} loading="lazy" />
+                <img
+                  src={cloudinaryImage(url, 800)}
+                  srcSet={`${cloudinaryImage(url, 400)} 400w, ${cloudinaryImage(url, 800)} 800w, ${cloudinaryImage(url, 1200)} 1200w`}
+                  sizes="(max-width: 760px) 50vw, (max-width: 980px) 33vw, 25vw"
+                  alt={`${item.title || 'Event decoration'} by Chinmayi Events`}
+                  loading="lazy"
+                  decoding="async"
+                />
               )}
             </figure>
           );
