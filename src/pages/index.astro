@@ -5,28 +5,17 @@ import ContactForm from '../components/ContactForm.jsx';
 import TestimonialsPanel from '../components/TestimonialsPanel.jsx';
 import IslandStyles from '../components/IslandStyles.astro';
 import SmartImage from '../components/SmartImage.astro';
-import { faqs, site, siteUrl, whatsappHref } from '../data/site.js';
+import { areasServed, faqs, services, site, whatsappHref } from '../data/site.js';
+import { getExperiences, getGalleryItems, ratingSummary } from '../data/live-content.js';
+import { reviewSchema } from '../data/schema.js';
 
-const localBusinessSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: site.name,
-  image: new URL(site.ogImage, siteUrl).toString(),
-  url: siteUrl,
-  telephone: site.phonePrimary,
-  email: site.email,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Chandrakatte, Behind Shanimahathma Temple, Kempanahalli',
-    addressLocality: site.locality,
-    addressRegion: site.region,
-    postalCode: '577101',
-    addressCountry: site.country
-  },
-  areaServed: ['Chikkamagaluru', 'Kempanahalli', 'Karnataka'],
-  sameAs: [site.instagram],
-  priceRange: 'Contact for quote'
-};
+// Reviews and highlights are pulled at build time so they are in the HTML the
+// crawler reads. The LocalBusiness entity itself now lives in BaseLayout.
+const experiences = await getExperiences();
+const rating = ratingSummary(experiences);
+const highlightItems = (await getGalleryItems())
+  .filter((item) => item.isHighlight && item.cloudinaryUrl)
+  .slice(0, 8);
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -44,64 +33,72 @@ const faqSchema = {
 const signatureServices = [
   {
     label: 'Wedding Decoration',
+    href: '/services/wedding-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
-    alt: 'Wedding stage decoration by Chinmayi Events in Chikkamagaluru'
+    alt: 'Wedding stage decoration with floral backdrop by Chinmayi Events in Chikkamagaluru'
   },
   {
     label: 'House Warming',
+    href: '/services/housewarming-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-event-centerpiece-decoration.avif',
-    alt: 'Event centerpiece decoration suitable for house warming celebrations'
+    alt: 'Floral centerpiece decoration for a housewarming celebration in Chikkamagaluru'
   },
   {
     label: 'Reception Decor',
+    href: '/services/reception-stage-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-reception-stage-decoration.jpeg',
-    alt: 'Reception stage decoration by Chinmayi Events'
+    alt: 'Reception stage decoration with lighting by Chinmayi Events in Chikkamagaluru'
   },
   {
     label: 'Outdoor Events',
+    href: '/services/outdoor-event-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-gallery-outdoor-decor-5.jpeg',
-    alt: 'Outdoor event decoration setup in Chikkamagaluru'
+    alt: 'Outdoor event decoration set up on open ground in Chikkamagaluru'
   },
   {
     label: 'Birthday Parties',
+    href: '/services/birthday-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-birthday-cake-table-decoration.jpg',
-    alt: 'Birthday cake table decoration by Chinmayi Events'
+    alt: 'Birthday cake table decoration with balloons by Chinmayi Events'
   },
   {
-    label: 'Entry Decoration',
+    label: 'Naming Ceremony',
+    href: '/services/naming-ceremony-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-gallery-entry-decoration-7.jpeg',
-    alt: 'Entry decoration with event lighting and floral details'
+    alt: 'Floral entry decoration for a naming ceremony in Chikkamagaluru'
   },
   {
     label: 'Vehicle Decoration',
+    href: '/services/vehicle-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-flower-theme-decoration.jpg',
-    alt: 'Floral decoration style used by Chinmayi Events'
+    alt: 'Fresh flower decoration work used for wedding vehicle decor'
   },
   {
     label: 'Floral Decoration',
+    href: '/services/flower-theme-decoration-chikkamagaluru/',
     image: '/images/chikkamagaluru-gallery-floral-backdrop-9.jpeg',
-    alt: 'Floral backdrop decoration by Chinmayi Events'
+    alt: 'Floral backdrop wall decoration by Chinmayi Events in Chikkamagaluru'
   }
 ];
 
 const galleryItems = [
-  '/images/chikkamagaluru-gallery-night-stage-10.jpeg',
-  '/images/chikkamagaluru-reception-stage-decoration.jpeg',
-  '/images/chikkamagaluru-gallery-wedding-mandap-2.jpeg',
-  '/images/chikkamagaluru-gallery-outdoor-decor-5.jpeg',
-  '/images/chikkamagaluru-gallery-stage-lighting-8.jpeg',
-  '/images/chikkamagaluru-gallery-wedding-pathway-11.jpeg',
-  '/images/chikkamagaluru-gallery-floral-backdrop-9.jpeg',
-  '/images/chikkamagaluru-wedding-stage-decoration.jpg',
-  '/images/chikkamagaluru-gallery-entry-decoration-7.jpeg',
-  '/images/chikkamagaluru-gallery-reception-stage-6.jpeg',
-  '/images/chikkamagaluru-gallery-ceremony-stage-12.jpeg',
-  '/images/chikkamagaluru-gallery-floral-entrance-13.jpeg',
-  '/images/chikkamagaluru-gallery-stage-backdrop-14.jpeg',
-  '/images/chikkamagaluru-gallery-wedding-decor-15.jpeg',
-  '/images/chikkamagaluru-gallery-reception-decor-16.jpeg',
-  '/images/chikkamagaluru-gallery-floral-stage-17.jpeg',
-  '/images/chikkamagaluru-gallery-event-lighting-18.jpeg'
+  ['/images/chikkamagaluru-gallery-night-stage-10.jpeg', 'Night wedding stage decoration with warm lighting in Chikkamagaluru'],
+  ['/images/chikkamagaluru-reception-stage-decoration.jpeg', 'Reception stage decoration with floral backdrop in Chikkamagaluru'],
+  ['/images/chikkamagaluru-gallery-wedding-mandap-2.jpeg', 'Traditional wedding mandap decoration by Chinmayi Events'],
+  ['/images/chikkamagaluru-gallery-outdoor-decor-5.jpeg', 'Outdoor event decoration on open ground in Chikkamagaluru'],
+  ['/images/chikkamagaluru-gallery-stage-lighting-8.jpeg', 'Event stage lighting setup for an evening function'],
+  ['/images/chikkamagaluru-gallery-wedding-pathway-11.jpeg', 'Decorated wedding entrance pathway with floral arches'],
+  ['/images/chikkamagaluru-gallery-floral-backdrop-9.jpeg', 'Floral backdrop wall for a wedding stage in Chikkamagaluru'],
+  ['/images/chikkamagaluru-wedding-stage-decoration.jpg', 'Premium wedding stage decoration by Chinmayi Events'],
+  ['/images/chikkamagaluru-gallery-entry-decoration-7.jpeg', 'Event entry decoration with flowers and lighting'],
+  ['/images/chikkamagaluru-gallery-reception-stage-6.jpeg', 'Reception stage with couple seating and floral decor'],
+  ['/images/chikkamagaluru-gallery-ceremony-stage-12.jpeg', 'Ceremony stage decoration for a family function in Chikkamagaluru'],
+  ['/images/chikkamagaluru-gallery-floral-entrance-13.jpeg', 'Floral entrance arch decoration at an event venue'],
+  ['/images/chikkamagaluru-gallery-stage-backdrop-14.jpeg', 'Custom stage backdrop decoration by Chinmayi Events'],
+  ['/images/chikkamagaluru-gallery-wedding-decor-15.jpeg', 'Complete wedding venue decoration in Chikkamagaluru'],
+  ['/images/chikkamagaluru-gallery-reception-decor-16.jpeg', 'Reception hall decoration with lighting and flower work'],
+  ['/images/chikkamagaluru-gallery-floral-stage-17.jpeg', 'Floral stage decoration for a haldi ceremony'],
+  ['/images/chikkamagaluru-gallery-event-lighting-18.jpeg', 'Event lighting and decoration setup in Chikkamagaluru']
 ];
 
 const reasons = [
@@ -144,10 +141,11 @@ const instagramImages = galleryItems.slice(1, 7);
 ---
 
 <BaseLayout
-  title="Event Decoration in Chikkamagaluru | Chinmayi Events"
-  description="Chinmayi Events provides premium wedding, reception, birthday, engagement, flower theme, shamiyana, chair and carpet decoration in Chikkamagaluru."
+  title="Event Management & Decoration in Chikkamagaluru | Chinmayi Events"
+  description="Chinmayi Events is an event management and decoration team in Chikkamagaluru for weddings, receptions, haldi, naming ceremonies, birthdays, housewarming and corporate events. Call for a quote."
   canonical="/"
-  jsonLd={[localBusinessSchema, faqSchema]}
+  jsonLd={[faqSchema, ...reviewSchema(experiences)]}
+  businessRating={rating}
   preloadHero={true}
 >
   <IslandStyles />
@@ -160,7 +158,7 @@ const instagramImages = galleryItems.slice(1, 7);
       <div class="ornament"></div>
       <div class="service-strip">
         {signatureServices.map((service) => (
-          <a href="/services/" class="service-tile">
+          <a href={service.href} class="service-tile">
             <SmartImage
               src={service.image}
               alt={service.alt}
@@ -182,11 +180,11 @@ const instagramImages = galleryItems.slice(1, 7);
       <h2 class="section-title">Recent Decorations</h2>
       <div class="ornament"></div>
       <div class="masonry-gallery">
-        {galleryItems.map((src, index) => (
+        {galleryItems.map(([src, alt], index) => (
           <figure class:list={[index === 0 || index === 3 ? 'tall' : '', index === 2 || index === 7 ? 'wide' : '']}>
             <SmartImage
               src={src}
-              alt={`Chinmayi Events decoration portfolio ${index + 1} in Chikkamagaluru`}
+              alt={alt}
               sizes="(max-width: 620px) 50vw, (max-width: 980px) 33vw, 25vw"
               widths={[400, 800, 1200]}
               loading={index < 2 ? 'eager' : 'lazy'}
@@ -236,7 +234,11 @@ const instagramImages = galleryItems.slice(1, 7);
 
   <section id="testimonials" class="section proof-section">
     <div class="container">
-      <TestimonialsPanel client:load />
+      <TestimonialsPanel
+        client:load
+        initialReviews={experiences}
+        initialHighlights={highlightItems}
+      />
     </div>
   </section>
 
@@ -246,13 +248,46 @@ const instagramImages = galleryItems.slice(1, 7);
       <p class="eyebrow">Follow us on Instagram</p>
       <h2><a href={site.instagram} target="_blank" rel="noopener noreferrer">@chinmayi_events</a></h2>
       <div class="instagram-row">
-        {instagramImages.map((src, index) => (
-          <SmartImage
-            src={src}
-            alt={`Instagram decoration preview ${index + 1} from Chinmayi Events`}
-            sizes="(max-width: 620px) 33vw, 16vw"
-            widths={[400, 800]}
-          />
+        {instagramImages.map(([src, alt]) => (
+          <a
+            class="instagram-tile"
+            href={site.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${alt} — view on Instagram`}
+          >
+            <SmartImage
+              src={src}
+              alt={alt}
+              sizes="(max-width: 620px) 45vw, (max-width: 980px) 30vw, 180px"
+              widths={[400, 800]}
+              width="360"
+              height="277"
+            />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section areas-section centered">
+    <div class="container">
+      <p class="eyebrow">Where we work</p>
+      <h2 class="section-title">Event Decoration Across Chikkamagaluru District</h2>
+      <div class="ornament"></div>
+      <p class="lead areas-lead">
+        Chinmayi Events is based in Chikkamagaluru and travels across the
+        district for weddings, receptions and family functions. Share your venue
+        and date and the team will confirm availability and travel for your area.
+      </p>
+      <ul class="areas-list">
+        {areasServed.map((area) => (
+          <li>{area}</li>
+        ))}
+      </ul>
+      <div class="areas-services">
+        {services.map((service) => (
+          <a href={`/services/${service.slug}/`}>{service.shortTitle}</a>
         ))}
       </div>
     </div>
@@ -512,12 +547,71 @@ const instagramImages = galleryItems.slice(1, 7);
     margin-top: 30px;
   }
 
+  .instagram-tile {
+    display: block;
+    aspect-ratio: 1.3;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--soft);
+    box-shadow: 0 10px 24px rgba(38, 23, 15, 0.08);
+  }
+
   .instagram-row :global(img) {
     width: 100%;
-    aspect-ratio: 1.3;
+    height: 100%;
     object-fit: cover;
-    border-radius: 4px;
-    box-shadow: 0 10px 24px rgba(38, 23, 15, 0.08);
+    transition: transform 220ms ease;
+  }
+
+  .instagram-tile:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .areas-section {
+    background: #fffaf1;
+  }
+
+  .areas-lead {
+    max-width: 70ch;
+  }
+
+  .areas-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .areas-list li {
+    padding: 7px 16px;
+    border: 1px solid rgba(217, 173, 82, 0.5);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .areas-services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 18px;
+    margin-top: 26px;
+  }
+
+  .areas-services a {
+    color: var(--muted);
+    font-size: 0.84rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .areas-services a:hover {
+    color: var(--gold-dark);
   }
 
   .whatsapp-band {
@@ -712,7 +806,7 @@ const instagramImages = galleryItems.slice(1, 7);
       margin-top: 22px;
     }
 
-    .instagram-row :global(img) {
+    .instagram-tile {
       aspect-ratio: 1;
     }
 

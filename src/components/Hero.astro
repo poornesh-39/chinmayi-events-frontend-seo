@@ -18,11 +18,11 @@ import SmartImage from './SmartImage.astro';
   <div class="hero-shade"></div>
   <div class="container hero-content">
     <p class="eyebrow">We create, you celebrate</p>
-    <h1>Creating Beautiful<br />Memories</h1>
-    <p class="signature">Across Karnataka</p>
+    <h1>Event Management &amp; Decoration<br />in Chikkamagaluru</h1>
+    <p class="signature">Creating beautiful memories across Karnataka</p>
     <p class="hero-copy">
-      Weddings, house warming, corporate events and more, crafted with elegance
-      and perfection in Chikkamagaluru.
+      Weddings, receptions, haldi, naming ceremonies, housewarming, birthdays
+      and corporate events, crafted with elegance and set up on time.
     </p>
     <div class="btn-row">
       <a class="button button-primary" href="/gallery/">View Our Work</a>
@@ -97,9 +97,10 @@ import SmartImage from './SmartImage.astro';
   }
 
   h1 {
-    max-width: 700px;
-    margin: 18px 0 8px;
-    font-size: clamp(3rem, 7vw, 6.2rem);
+    max-width: 16ch;
+    margin: 18px 0 10px;
+    font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+    line-height: 1.04;
     text-shadow: 0 12px 42px rgba(0, 0, 0, 0.44);
   }
 
@@ -107,15 +108,25 @@ import SmartImage from './SmartImage.astro';
     margin: 0 0 18px;
     color: var(--gold);
     font-family: "Brush Script MT", "Segoe Script", cursive;
-    font-size: clamp(2rem, 4vw, 3.8rem);
-    line-height: 1;
+    font-size: clamp(1.4rem, 2.3vw, 2.25rem);
+    line-height: 1.15;
   }
 
+  /* Matches the .eyebrow treatment above the headline — same size, weight,
+     tracking and uppercase — set in white so the two read as a pair rather
+     than as one label. Uppercase at 0.14em tracking runs roughly a third
+     wider than sentence case and wraps to several lines here, so the measure
+     and leading are opened up to keep it scannable. */
   .hero-copy {
-    max-width: 520px;
+    max-width: 44ch;
     margin-bottom: 28px;
-    color: rgba(255, 249, 238, 0.82);
-    font-weight: 650;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    line-height: 2;
+    text-transform: uppercase;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
   }
 
   .hero-bottom {
@@ -200,22 +211,24 @@ import SmartImage from './SmartImage.astro';
     }
 
     h1 {
-      max-width: 12ch;
+      max-width: 14ch;
       margin-top: 14px;
-      font-size: clamp(3rem, 15vw, 4.35rem);
-      line-height: 0.98;
+      font-size: clamp(2.15rem, 9.2vw, 3.1rem);
+      line-height: 1.06;
     }
 
     .signature {
+      max-width: 22ch;
       margin-bottom: 14px;
-      font-size: clamp(2rem, 10vw, 2.85rem);
+      font-size: clamp(1.2rem, 5.4vw, 1.6rem);
     }
 
     .hero-copy {
-      max-width: 34ch;
+      max-width: 30ch;
       margin-bottom: 22px;
-      font-size: 0.98rem;
-      line-height: 1.55;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      line-height: 1.95;
     }
 
     .btn-row {
@@ -259,11 +272,13 @@ import SmartImage from './SmartImage.astro';
     }
 
     h1 {
-      font-size: clamp(2.78rem, 14.5vw, 3.55rem);
+      font-size: clamp(1.95rem, 8.6vw, 2.5rem);
     }
 
     .hero-copy {
-      font-size: 0.92rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.1em;
+      line-height: 1.9;
     }
 
     .btn-row {

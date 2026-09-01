@@ -1,5 +1,5 @@
 ---
-import { site, services, whatsappHref, gmailHref } from '../data/site.js';
+import { areasServed, site, services, whatsappHref, gmailHref } from '../data/site.js';
 ---
 
 <footer class="footer">
@@ -37,11 +37,10 @@ import { site, services, whatsappHref, gmailHref } from '../data/site.js';
       <a href="/services/">Services</a>
       <a href="/gallery/">Gallery</a>
       <a href="/contact/">Contact Us</a>
-      <a href="/admin/" rel="nofollow">Admin Panel</a>
     </div>
     <div>
       <h3>Services</h3>
-      {services.slice(0, 6).map((service) => (
+      {services.map((service) => (
         <a href={`/services/${service.slug}/`}>{service.shortTitle}</a>
       ))}
     </div>
@@ -51,8 +50,16 @@ import { site, services, whatsappHref, gmailHref } from '../data/site.js';
       <p>{site.address}</p>
       <a href={`tel:${site.phonePrimary}`}>{site.phonePrimaryLabel}</a>
       <a href={gmailHref()} target="_blank" rel="noopener noreferrer">{site.email}</a>
-      <span>Mon - Sun: 9:00 AM - 8:00 PM</span>
+      <span>{site.openingHoursLabel}</span>
+      <a href={site.googleMapsUrl} target="_blank" rel="noopener noreferrer">
+        View on Google Maps
+      </a>
     </div>
+  </div>
+
+  <div class="container footer-areas">
+    <h3>Areas we serve</h3>
+    <p>{areasServed.join(' · ')}</p>
   </div>
   <div class="container footer-bottom">
     <span>@ {new Date().getFullYear()} Chinmayi Events. All rights reserved.</span>
@@ -61,6 +68,24 @@ import { site, services, whatsappHref, gmailHref } from '../data/site.js';
 </footer>
 
 <style>
+  .footer-areas {
+    margin-top: 34px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 247, 236, 0.12);
+  }
+
+  .footer-areas h3 {
+    margin: 0 0 8px;
+    font-size: 0.9rem;
+  }
+
+  .footer-areas p {
+    margin: 0;
+    color: rgba(255, 247, 236, 0.55);
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+
   .footer {
     background: #050504;
     color: #fff7ec;
@@ -88,8 +113,7 @@ import { site, services, whatsappHref, gmailHref } from '../data/site.js';
   .footer-brand img {
     width: 58px;
     height: 58px;
-    border-radius: 50%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   h3 {

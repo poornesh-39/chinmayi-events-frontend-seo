@@ -3,7 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryPreview from '../../components/GalleryPreview.astro';
 import ContactForm from '../../components/ContactForm.jsx';
 import IslandStyles from '../../components/IslandStyles.astro';
-import { services, site, siteUrl, whatsappHref } from '../../data/site.js';
+import { areasServed, services, siteUrl, whatsappHref } from '../../data/site.js';
+import { breadcrumbSchema, businessId } from '../../data/schema.js';
 import { heroBackground } from '../../data/images.js';
 
 export function getStaticPaths() {
@@ -21,30 +22,15 @@ const schema = {
   description: service.description,
   keywords: service.keywords,
   image: new URL(service.image, siteUrl).toString(),
-  provider: {
-    '@type': 'LocalBusiness',
-    name: site.name,
-    telephone: site.phonePrimary,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: site.locality,
-      addressRegion: site.region,
-      addressCountry: site.country
-    }
-  },
-  areaServed: ['Chikkamagaluru', 'Kempanahalli', 'Karnataka'],
+  provider: { '@id': businessId },
+  areaServed: areasServed.map((name) => ({ '@type': 'City', name })),
   url: new URL(`/services/${service.slug}/`, siteUrl).toString()
 };
 
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-    { '@type': 'ListItem', position: 2, name: 'Services', item: new URL('/services/', siteUrl).toString() },
-    { '@type': 'ListItem', position: 3, name: service.title, item: new URL(`/services/${service.slug}/`, siteUrl).toString() }
-  ]
-};
+const breadcrumb = breadcrumbSchema([
+  ['Services', '/services/'],
+  [service.shortTitle, `/services/${service.slug}/`]
+]);
 ---
 
 <BaseLayout
@@ -52,7 +38,7 @@ const breadcrumbSchema = {
   description={service.description}
   canonical={`/services/${service.slug}/`}
   image={service.image}
-  jsonLd={[schema, breadcrumbSchema]}
+  jsonLd={[schema, breadcrumb]}
 >
   <IslandStyles />
   <section class="interior-hero" style={`--page-hero-image: url('${heroBackground(service.image)}')`}>

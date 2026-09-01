@@ -60,14 +60,22 @@ const navItems = [
 
 <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Site menu" hidden>
   <div class="mobile-menu-head">
-    <img
-      class="mm-logo"
-      src="/images/opt/chinmayi-events-logo-128.webp"
-      alt="Chinmayi Events"
-      width="42"
-      height="42"
-      loading="lazy"
-    />
+    <a class="mm-brand" href="/">
+      <img
+        class="mm-logo"
+        src="/images/opt/chinmayi-events-logo-128.webp"
+        srcset="/images/opt/chinmayi-events-logo-64.webp 64w, /images/opt/chinmayi-events-logo-128.webp 128w"
+        sizes="46px"
+        alt="Chinmayi Events logo"
+        width="46"
+        height="46"
+        loading="lazy"
+      />
+      <span class="mm-brand-text">
+        <strong>Chinmayi Events</strong>
+        <small>{site.tagline}</small>
+      </span>
+    </a>
     <button type="button" class="menu-close" id="menu-close" aria-label="Close menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
@@ -77,7 +85,6 @@ const navItems = [
     {navItems.map((item) => (
       <a
         href={item.href}
-        class:list={[isActive(item.href) || item.active ? 'active' : '']}
         aria-current={isActive(item.href) || item.active ? 'page' : undefined}
       >
         {item.label}
@@ -88,6 +95,7 @@ const navItems = [
   <div class="mobile-menu-foot">
     <a class="mm-call" href={`tel:${site.phonePrimary}`}>Call {site.phonePrimaryLabel}</a>
     <a class="mm-wa" href={whatsappHref()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    <p class="mm-hours">{site.openingHoursLabel}</p>
   </div>
 </div>
 
@@ -200,8 +208,7 @@ const navItems = [
   .brand img {
     width: 54px;
     height: 54px;
-    border-radius: 50%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   nav {
@@ -297,9 +304,11 @@ const navItems = [
     position: fixed;
     inset: 0;
     z-index: 55;
-    background: rgba(15, 12, 10, 0.4);
+    background: rgba(15, 12, 10, 0.34);
+    -webkit-backdrop-filter: blur(9px) saturate(120%);
+    backdrop-filter: blur(9px) saturate(120%);
     opacity: 0;
-    transition: opacity 200ms ease;
+    transition: opacity 220ms ease;
   }
 
   :global(body.menu-open) .menu-backdrop {
@@ -312,12 +321,14 @@ const navItems = [
     right: 0;
     bottom: 0;
     z-index: 60;
-    width: min(300px, 82vw);
+    width: min(300px, 84vw);
     display: flex;
     flex-direction: column;
-    padding: 14px 20px calc(20px + env(safe-area-inset-bottom));
-    background: #fff;
-    box-shadow: -8px 0 32px rgba(38, 23, 15, 0.14);
+    padding: 18px 20px calc(22px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, #fffdf8, #fbf6ee);
+    border-left: 1px solid var(--line);
+    box-shadow: -18px 0 48px rgba(38, 23, 15, 0.22);
+    color: var(--ink);
     overflow-y: auto;
     overscroll-behavior: contain;
     transform: translateX(100%);
@@ -332,19 +343,60 @@ const navItems = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mm-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
   }
 
   .mm-logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    object-fit: cover;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  .mm-brand-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  /* Same serif lockup as the desktop brand mark. Sized to the narrower panel:
+     "Chinmayi Events" is ~9.2em wide in Georgia, so at this width it is what
+     sets the floor on how narrow the drawer can go. The ellipsis is a guard —
+     if the serif stack ever falls back to something wider, the name truncates
+     instead of pushing the close button off the panel. */
+  .mm-brand-text strong {
+    color: var(--maroon);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mm-brand-text small {
+    color: var(--gold-dark);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    line-height: 1.3;
+    text-transform: uppercase;
   }
 
   .menu-close {
     width: 40px;
     height: 40px;
+    flex: 0 0 auto;
     margin-right: -8px;
     display: grid;
     place-items: center;
@@ -367,55 +419,69 @@ const navItems = [
   /* Grouped directly under the logo rather than spread down the panel. */
   .mobile-nav {
     display: grid;
-    gap: 2px;
-    padding: 4px 0;
+    /* Sets the space under the brand rule. The first link adds its own 5px of
+       padding on top of this, so the visible gap is 5px more than the value
+       here. */
+    padding: 18px 0 2px;
   }
 
+  /* Matches the desktop nav: uppercase and tracked. No rules between rows and
+     no current-page marker — the row height alone carries the separation. */
   .mobile-nav a {
-    min-height: 42px;
-    display: flex;
-    align-items: center;
-    /* Transparent on every row so the active marker adds no layout shift. */
-    border-left: 2px solid transparent;
-    padding-left: 14px;
-    margin-left: -16px;
+    display: block;
+    /* Exactly 10px between adjacent titles: 5px below one row plus 5px above
+       the next. Done with padding rather than a grid gap so the tap areas stay
+       contiguous — a gap would leave each link a bare 15px island. */
+    padding: 5px 0;
     color: var(--ink);
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-  }
-
-  .mobile-nav a.active {
-    border-left-color: var(--maroon);
-    color: var(--maroon);
+    font-size: 0.74rem;
+    font-weight: 900;
+    /* Pinned rather than inherited from the 1.55 body value, so the spacing
+       comes from the padding and not from an invisible line box. */
+    line-height: 1.25;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
   }
 
   .mobile-menu-foot {
     display: grid;
-    gap: 9px;
+    gap: 10px;
     margin-top: auto;
     padding-top: 20px;
+    border-top: 1px solid var(--line);
   }
 
   .mobile-menu-foot a {
     min-height: 46px;
     display: grid;
     place-items: center;
-    border-radius: 6px;
+    border-radius: 4px;
     padding: 11px 12px;
-    font-size: 0.82rem;
-    font-weight: 800;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
     text-align: center;
+    text-transform: uppercase;
   }
 
   .mm-call {
-    background: var(--maroon);
+    background: linear-gradient(135deg, var(--maroon), #4a1020);
     color: #fff8ec;
   }
 
   .mm-wa {
     border: 1px solid var(--line);
+    background: #fff;
     color: var(--ink);
+  }
+
+  .mm-hours {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-align: center;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -434,12 +500,33 @@ const navItems = [
     .menu-toggle {
       display: grid;
     }
+
+    /* Drops the whole bar rather than just the brand, so the logo and the
+       menu button stay on one line as they move down. */
+    .nav {
+      padding-top: 10px;
+    }
   }
 
   @media (min-width: 981px) {
     .mobile-menu,
     .menu-backdrop {
       display: none;
+    }
+
+    /* Row stays centred — top-aligning it lifted the links ~8px. To lower the
+       logo without raising the links, the whole bar is dropped instead. */
+    .nav {
+      padding-top: 10px;
+    }
+
+    /* `nav a` is padded 30px top against 18px bottom, so its text sits
+       (30 - 18) / 2 = 6px below the row's centre line. The brand takes the
+       same offset so the two share one centre line, whatever the font metrics
+       turn out to be. */
+    .brand {
+      position: relative;
+      top: 6px;
     }
   }
 

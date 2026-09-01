@@ -5,21 +5,33 @@ import Footer from '../components/Footer.astro';
 import StickyActions from '../components/StickyActions.astro';
 import { site, siteUrl } from '../data/site.js';
 import { responsiveImage } from '../data/images.js';
+import { localBusinessSchema, websiteSchema } from '../data/schema.js';
 
 const {
   title = `${site.tagline} | ${site.name}`,
   description = site.description,
   canonical = Astro.url.pathname,
   image = site.ogImage,
+  imageAlt = `${site.name} — event decoration in ${site.locality}`,
   jsonLd = [],
   preloadHero = false,
-  noindex = false
+  noindex = false,
+  ogType = 'website',
+  // Only pages that display the reviews may carry the aggregate rating.
+  businessRating = null
 } = Astro.props;
 
 const heroImage = responsiveImage(site.heroImage);
 const canonicalUrl = new URL(canonical, siteUrl).toString();
 const imageUrl = new URL(image, siteUrl).toString();
-const ldItems = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+
+// The business and site entities go on every page with a stable @id, so page
+// schema can reference the business instead of redeclaring it.
+const ldItems = [
+  localBusinessSchema({ rating: businessRating }),
+  websiteSchema(),
+  ...(Array.isArray(jsonLd) ? jsonLd : [jsonLd])
+].filter(Boolean);
 ---
 
 <!doctype html>
@@ -38,10 +50,17 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
     />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
+    <meta name="geo.region" content="IN-KA" />
+    <meta name="geo.placename" content={site.locality} />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" href="/images/opt/chinmayi-events-logo-64.webp" type="image/webp" />
-    <link rel="apple-touch-icon" href="/images/opt/chinmayi-events-logo-256.jpg" />
+    <link rel="apple-touch-icon" href="/images/opt/chinmayi-events-logo-icon-180.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     {preloadHero && (
       <link
@@ -55,18 +74,22 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
       />
     )}
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     {ldItems.map((item) => (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />

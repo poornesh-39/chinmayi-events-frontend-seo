@@ -3,13 +3,14 @@
  *
  * PUBLIC_SITE_URL feeds every canonical tag, Open Graph URL and sitemap entry,
  * so shipping the placeholder points search engines at a domain that does not
- * exist. Warns locally; fails the build on CI (Netlify sets CI=true).
+ * exist. Warns locally; fails the build on CI (Vercel and Netlify both set CI=true).
  */
 import { existsSync, readFileSync } from 'node:fs';
 
 const PLACEHOLDERS = [
   'your-new-netlify-site.netlify.app',
-  'your-render-backend-url.onrender.com'
+  'your-render-backend-url.onrender.com',
+  'your-site-url-here'
 ];
 
 // Astro loads .env through Vite, so a plain node script has to read it itself.

@@ -2,24 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { apiUrl, cloudinaryVideoThumb, eventTypes, site } from '../data/site.js';
 import './TestimonialsPanel.css';
 
-const fallbackReviews = [
-  {
-    _id: 'fallback-1',
-    fullName: 'Ankita & Rohan',
-    eventType: 'wedding',
-    rating: 5,
-    experience:
-      'Chinmayi Events made our wedding absolutely magical. Every detail was perfect and exactly what we dreamed of.'
-  },
-  {
-    _id: 'fallback-2',
-    fullName: 'Pooja R',
-    eventType: 'reception',
-    rating: 5,
-    experience:
-      'Excellent work. The decoration was beyond our expectations. Highly recommended.'
-  }
-];
+/**
+ * Deliberately empty. This used to hold two invented testimonials, which the
+ * island server-rendered into the homepage — so the reviews Google indexed
+ * were written copy, not customers. Real reviews are now fetched at build time
+ * and passed in via `initialReviews`; if none are available the block simply
+ * does not render.
+ */
+const fallbackReviews = [];
 
 const fallbackHighlight = {
   _id: 'fallback-highlight',
@@ -80,9 +70,20 @@ const ModalMedia = ({ highlight }) => {
   return <img src={src} alt={title} />;
 };
 
-export default function TestimonialsPanel() {
-  const [reviews, setReviews] = useState(fallbackReviews);
-  const [highlights, setHighlights] = useState([fallbackHighlight]);
+/**
+ * `initialReviews` / `initialHighlights` are fetched at build time in
+ * index.astro so the testimonials exist in the static HTML. The mount-time
+ * loaders below still run and pick up anything newer.
+ *
+ * @param {{ initialReviews?: any[], initialHighlights?: any[] }} props
+ */
+export default function TestimonialsPanel({ initialReviews = [], initialHighlights = [] }) {
+  const [reviews, setReviews] = useState(
+    initialReviews.length > 0 ? initialReviews : fallbackReviews
+  );
+  const [highlights, setHighlights] = useState(
+    initialHighlights.length > 0 ? initialHighlights : [fallbackHighlight]
+  );
   const [form, setForm] = useState(initialForm);
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -91,12 +92,15 @@ export default function TestimonialsPanel() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const visibleReviews = reviews.slice(0, 8);
-  const activeReview = visibleReviews[activeIndex] || fallbackReviews[0];
-  const nextReview = visibleReviews[(activeIndex + 1) % visibleReviews.length] || fallbackReviews[1] || activeReview;
+  const activeReview = visibleReviews[activeIndex] || visibleReviews[0] || null;
+  const nextReview =
+    visibleReviews.length > 1
+      ? visibleReviews[(activeIndex + 1) % visibleReviews.length]
+      : null;
   const activeHighlight = highlights[highlightIndex] || fallbackHighlight;
 
   const averageRating = useMemo(() => {
-    if (!reviews.length) return '5.0';
+    if (!reviews.length) return null;
     const total = reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0);
     return (total / reviews.length).toFixed(1);
   }, [reviews]);
@@ -243,11 +247,13 @@ export default function TestimonialsPanel() {
           <h2>What Our Clients Say</h2>
 
         </div>
-        <div className="rating-summary">
-          <strong>{averageRating}</strong>
-          <span>★ ★ ★ ★ ★</span>
-          <small>Customer rating</small>
-        </div>
+        {averageRating && (
+          <div className="rating-summary">
+            <strong>{averageRating}</strong>
+            <span>★ ★ ★ ★ ★</span>
+            <small>Average of {reviews.length} client reviews</small>
+          </div>
+        )}
       </div>
 
       <div className="proof-showcase" aria-label="Customer testimonials and event highlight">
@@ -285,8 +291,8 @@ export default function TestimonialsPanel() {
 
         <div className="reviews-showcase-block">
           <div className="review-cards-row">
-            <ReviewCard review={activeReview} label="What our clients say" />
-            <ReviewCard review={nextReview} label="Google reviews" compact />
+            {activeReview && <ReviewCard review={activeReview} label="What our clients say" />}
+            {nextReview && <ReviewCard review={nextReview} label="Client experience" compact />}
           </div>
 
           {visibleReviews.length > 1 && (

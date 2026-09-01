@@ -3,6 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import LiveGallery from '../components/LiveGallery.jsx';
 import IslandStyles from '../components/IslandStyles.astro';
 import { site, siteUrl } from '../data/site.js';
+import { getGalleryItems, galleryImageUrls } from '../data/live-content.js';
+import { breadcrumbSchema } from '../data/schema.js';
+
+// Fetched at build time so the photos are in the HTML a crawler reads, not
+// only in the island's mount-time fetch.
+const galleryItems = await getGalleryItems();
+const indexableImages = galleryImageUrls(galleryItems, 60);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -14,7 +21,19 @@ const schema = {
     '@type': 'WebSite',
     name: site.name,
     url: siteUrl
-  }
+  },
+  ...(indexableImages.length > 0 && {
+    mainEntity: {
+      '@type': 'ImageGallery',
+      name: 'Chinmayi Events decoration gallery',
+      image: indexableImages.map((item) => ({
+        '@type': 'ImageObject',
+        contentUrl: item.url,
+        name: item.title,
+        creditText: site.name
+      }))
+    }
+  })
 };
 ---
 
@@ -22,7 +41,7 @@ const schema = {
   title="Event Decoration Gallery in Chikkamagaluru | Chinmayi Events"
   description="View Chinmayi Events wedding decoration, reception stage, birthday decor, flower theme and shamiyana setup work in Chikkamagaluru."
   canonical="/gallery/"
-  jsonLd={schema}
+  jsonLd={[schema, breadcrumbSchema([['Gallery', '/gallery/']])]}
 >
   <IslandStyles />
   <section class="interior-hero" style="--page-hero-image: url('/images/opt/chikkamagaluru-gallery-night-stage-10-1200.webp')">
@@ -46,7 +65,7 @@ const schema = {
     <div class="container centered">
       <p class="eyebrow">Event gallery</p>
       <h2 class="section-title">Real celebrations, neatly organized by event type</h2>
-      <LiveGallery client:load />
+      <LiveGallery client:load initialItems={galleryItems} />
     </div>
   </section>
 </BaseLayout>
