@@ -1,6 +1,7 @@
 ---
 import { site, whatsappHref } from '../data/site.js';
 
+const { solid = false } = Astro.props;
 const pathname = Astro.url.pathname;
 const isActive = (href: string) => {
   if (href === '/') return pathname === '/';
@@ -18,7 +19,7 @@ const navItems = [
 ];
 ---
 
-<header class="site-header">
+<header class:list={['site-header', solid && 'solid']}>
   <div class="container nav">
     <a class="brand" href="/" aria-label="Chinmayi Events home">
       <img
@@ -183,6 +184,36 @@ const navItems = [
     right: 0;
     z-index: 30;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+  }
+
+  /* Pages with no hero image to float over (the admin panel) get a plain,
+     normal-flow bar instead — content simply starts after it, no padding-top
+     guesswork needed to clear it. Higher specificity than `.site-header` on
+     its own, so this wins over the mobile absolute re-assertion below too.
+     No background block: the brand/nav colors below flip to the site's
+     regular light-page palette instead of the white-on-photo colors the
+     transparent variant relies on. */
+  .site-header.solid {
+    position: relative;
+    background: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-header.solid .brand {
+    color: var(--maroon);
+  }
+
+  .site-header.solid nav {
+    color: var(--muted);
+  }
+
+  .site-header.solid nav a.active,
+  .site-header.solid nav a:hover {
+    color: var(--maroon);
+  }
+
+  .site-header.solid .menu-toggle {
+    color: var(--ink);
   }
 
   .nav {

@@ -32,6 +32,9 @@ button, input, select, textarea { font: inherit; }
 /* Locks background scrolling while the mobile drawer is open. */
 body.menu-open { overflow: hidden; }
 
+/* Locks background scrolling while a highlight/review modal is open. */
+body.modal-open { overflow: hidden; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {

@@ -21,6 +21,11 @@ const {
   businessRating = null
 } = Astro.props;
 
+// The admin panel has no hero image to float over, so it gets a solid,
+// normal-flow header instead of the transparent overlay the marketing pages
+// use — that avoids having to guess a padding-top that clears the header.
+const isAdminPage = Astro.url.pathname.startsWith('/admin');
+
 const heroImage = responsiveImage(site.heroImage);
 const canonicalUrl = new URL(canonical, siteUrl).toString();
 const imageUrl = new URL(image, siteUrl).toString();
@@ -97,12 +102,12 @@ const ldItems = [
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <Header />
+    <Header solid={isAdminPage} />
     <main id="main-content">
       <slot />
     </main>
     <Footer />
-    <StickyActions />
+    {!isAdminPage && <StickyActions />}
   </body>
 </html>
 
