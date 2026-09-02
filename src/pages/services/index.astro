@@ -2,7 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ServiceCards from '../../components/ServiceCards.astro';
 import FAQ from '../../components/FAQ.astro';
-import { services, site, siteUrl, whatsappHref } from '../../data/site.js';
+import { services, siteUrl, whatsappHref } from '../../data/site.js';
+import { breadcrumbSchema, businessId } from '../../data/schema.js';
 
 const serviceListSchema = {
   '@context': 'https://schema.org',
@@ -14,10 +15,7 @@ const serviceListSchema = {
       '@type': 'Service',
       name: service.title,
       description: service.description,
-      provider: {
-        '@type': 'LocalBusiness',
-        name: site.name
-      },
+      provider: { '@id': businessId },
       areaServed: 'Chikkamagaluru',
       url: new URL(`/services/${service.slug}/`, siteUrl).toString()
     }
@@ -29,7 +27,7 @@ const serviceListSchema = {
   title="Event Decoration Services in Chikkamagaluru | Chinmayi Events"
   description="Explore Chinmayi Events services for wedding decoration, reception stages, birthday decor, engagement decor, flower themes, shamiyana, chair and carpet setup in Chikkamagaluru."
   canonical="/services/"
-  jsonLd={serviceListSchema}
+  jsonLd={[serviceListSchema, breadcrumbSchema([['Services', '/services/']])]}
 >
   <section class="interior-hero" style="--page-hero-image: url('/images/opt/chikkamagaluru-wedding-stage-decoration-1200.webp')">
     <div class="container">

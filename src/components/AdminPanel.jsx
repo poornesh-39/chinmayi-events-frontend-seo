@@ -12,6 +12,11 @@ const categories = eventTypes;
 
 const videoThumb = (url) => cloudinaryVideoThumb(url, 720);
 
+// Below this width, opening the original media in a new tab is clumsy on a
+// phone browser — show it in an in-page lightbox instead. Matches the
+// breakpoint the gallery card layout itself switches on.
+const MOBILE_PREVIEW_QUERY = '(max-width: 720px)';
+
 export default function AdminPanel() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
@@ -20,6 +25,7 @@ export default function AdminPanel() {
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
+  const [previewItem, setPreviewItem] = useState(null);
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -130,6 +136,30 @@ export default function AdminPanel() {
     }
   };
 
+  const openMediaPreview = (event, item) => {
+    if (typeof window !== 'undefined' && window.matchMedia(MOBILE_PREVIEW_QUERY).matches) {
+      event.preventDefault();
+      setPreviewItem(item);
+    }
+    // Otherwise let the anchor's default behaviour open the original file in a new tab.
+  };
+
+  useEffect(() => {
+    if (!previewItem) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setPreviewItem(null);
+    };
+
+    document.body.classList.add('modal-open');
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.classList.remove('modal-open');
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [previewItem]);
+
   if (!loggedIn) {
     return (
       <section className="admin-shell">
@@ -206,23 +236,55 @@ export default function AdminPanel() {
               {items.map((item) => (
                 <article key={item._id}>
                   <div className="media-preview">
-                    <img src={item.mediaType === 'video' ? videoThumb(item.cloudinaryUrl) : item.cloudinaryUrl} alt={item.title} />
+                    <a
+                      className="media-preview-link"
+                      href={item.cloudinaryUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => openMediaPreview(event, item)}
+                      aria-label={`Open full-size ${item.mediaType === 'video' ? 'video' : 'photo'}: ${item.title}`}
+                    >
+                      <img src={item.mediaType === 'video' ? videoThumb(item.cloudinaryUrl) : item.cloudinaryUrl} alt={item.title} />
+                      {item.mediaType === 'video' && <span className="media-play-badge" aria-hidden="true" />}
+                    </a>
                     {item.isHighlight && <span className="highlight-badge">Highlight</span>}
-                  </div>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.eventCategory} - {item.mediaType}</p>
-                    <div className="media-actions">
+                    <div className="media-icon-actions">
                       <button
                         type="button"
                         className={item.isHighlight ? 'highlight-btn active' : 'highlight-btn'}
                         onClick={() => toggleHighlight(item._id)}
                         disabled={loading}
+                        title={item.isHighlight ? 'Remove Highlight' : 'Set Highlight'}
                       >
-                        {item.isHighlight ? 'Remove Highlight' : 'Set Highlight'}
+                        <svg className="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3Z"
+                            fill={item.isHighlight ? 'currentColor' : 'none'}
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span className="btn-label">{item.isHighlight ? 'Remove Highlight' : 'Set Highlight'}</span>
                       </button>
-                      <button type="button" className="delete-btn" onClick={() => deleteItem(item._id)} disabled={loading}>Delete</button>
+                      <button type="button" className="delete-btn" onClick={() => deleteItem(item._id)} disabled={loading} title="Delete">
+                        <svg className="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-8 0 1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.7"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span className="btn-label">Delete</span>
+                      </button>
                     </div>
+                  </div>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.eventCategory} - {item.mediaType}</p>
                   </div>
                 </article>
               ))}
@@ -232,6 +294,30 @@ export default function AdminPanel() {
       )}
 
       {activeTab === 'quotations' && <QuotationTool />}
+
+      {previewItem && (
+        <div className="media-lightbox" role="dialog" aria-modal="true" aria-label={previewItem.title}>
+          <button
+            type="button"
+            className="media-lightbox-backdrop"
+            onClick={() => setPreviewItem(null)}
+            aria-label="Close preview"
+          />
+          <div className="media-lightbox-panel">
+            <button type="button" className="media-lightbox-close" onClick={() => setPreviewItem(null)} aria-label="Close preview">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+            {previewItem.mediaType === 'video' ? (
+              <video src={previewItem.cloudinaryUrl} controls autoPlay playsInline />
+            ) : (
+              <img src={previewItem.cloudinaryUrl} alt={previewItem.title} />
+            )}
+            <p className="media-lightbox-title">{previewItem.title}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

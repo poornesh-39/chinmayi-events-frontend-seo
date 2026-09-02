@@ -2,13 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '../components/ContactForm.jsx';
 import IslandStyles from '../components/IslandStyles.astro';
-import { site, whatsappHref, gmailHref } from '../data/site.js';
+import { site, whatsappHref, gmailHref, directionsHref, mapEmbedSrc } from '../data/site.js';
+import { breadcrumbSchema } from '../data/schema.js';
 ---
 
 <BaseLayout
   title="Contact Chinmayi Events | Event Decoration in Chikkamagaluru"
   description="Contact Chinmayi Events for wedding decoration, reception stage, birthday decor, engagement decor and shamiyana setup in Chikkamagaluru."
   canonical="/contact/"
+  jsonLd={breadcrumbSchema([['Contact', '/contact/']])}
 >
   <IslandStyles />
   <section class="interior-hero" style="--page-hero-image: url('/images/opt/chikkamagaluru-custom-event-design-1200.webp')">
@@ -42,11 +44,37 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
         <a href={`tel:${site.phonePrimary}`}>{site.phonePrimaryLabel}</a>
         <span>{site.phoneSecondaryLabel}</span>
         <a href={gmailHref()} target="_blank" rel="noopener noreferrer">{site.email}</a>
-        <p>{site.address}</p>
+        <address>{site.address}</address>
+        <span>{site.openingHoursLabel}</span>
         <div class="btn-row">
           <a class="button button-dark" href={whatsappHref()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-          <a class="button button-outline" href={site.mapUrl} target="_blank" rel="noopener noreferrer">Map</a>
+          <a class="button button-outline" href={directionsHref()} target="_blank" rel="noopener noreferrer">Directions</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section map-section">
+    <div class="container">
+      <p class="eyebrow">Find us</p>
+      <h2 class="section-title">Chinmayi Events on Google Maps</h2>
+      <p class="lead map-lead">{site.address}</p>
+      <div class="map-frame">
+        <iframe
+          src={mapEmbedSrc()}
+          title={`Google Maps location of ${site.name} in ${site.locality}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <div class="btn-row map-actions">
+        <a class="button button-dark" href={site.googleMapsUrl} target="_blank" rel="noopener noreferrer">
+          Open in Google Maps
+        </a>
+        <a class="button button-outline" href={directionsHref()} target="_blank" rel="noopener noreferrer">
+          Get Directions
+        </a>
       </div>
     </div>
   </section>
@@ -69,6 +97,45 @@ import { site, whatsappHref, gmailHref } from '../data/site.js';
 </BaseLayout>
 
 <style>
+  .map-section {
+    background: #fffaf1;
+  }
+
+  .map-lead {
+    max-width: 60ch;
+  }
+
+  .map-frame {
+    margin-top: 22px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: 0 12px 30px rgba(38, 23, 15, 0.08);
+  }
+
+  .map-frame iframe {
+    display: block;
+    width: 100%;
+    height: 420px;
+    border: 0;
+  }
+
+  .map-actions {
+    margin-top: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .map-frame iframe {
+      height: 300px;
+    }
+  }
+
+  .contact-card address {
+    margin: 0;
+    color: var(--muted);
+    font-style: normal;
+  }
+
   .contact-card {
     display: grid;
     gap: 12px;

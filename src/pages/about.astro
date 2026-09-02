@@ -2,12 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GalleryPreview from '../components/GalleryPreview.astro';
 import { site, whatsappHref } from '../data/site.js';
+import { breadcrumbSchema } from '../data/schema.js';
 ---
 
 <BaseLayout
   title="About Chinmayi Events | Chikkamagaluru Event Decorators"
   description="Learn about Chinmayi Events, a Chikkamagaluru event decoration firm for weddings, receptions, birthdays, engagements and custom celebrations."
   canonical="/about/"
+  jsonLd={breadcrumbSchema([['About', '/about/']])}
 >
   <section class="interior-hero" style="--page-hero-image: url('/images/opt/chikkamagaluru-event-centerpiece-decoration-1200.webp')">
     <div class="container">
