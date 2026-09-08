@@ -140,7 +140,7 @@ h1, h2, h3, p { margin-top: 0; }
 }
 
 .interior-hero::before {
-  background-image: var(--page-hero-image, url('/images/opt/chikkamagaluru-wedding-stage-decoration-1200.webp'));
+  background-image: var(--page-hero-image, url('/images/opt/chikkamagaluru-wedding-hall-floral-stage-1200.webp'));
   background-size: cover;
   background-position: center;
   transform: scale(1.02);

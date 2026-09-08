@@ -4,24 +4,64 @@ import SmartImage from './SmartImage.astro';
 
 const { limit } = Astro.props;
 const visible = limit ? services.slice(0, limit) : services;
+
+/**
+ * The list is 13 services — a prime, so any uniform grid strands one card alone
+ * on the last row. Letting the first service run the full width absorbs that
+ * remainder (12 left over divides cleanly by both 3 and 2) and gives the
+ * flagship service the weight it already carries on the home page and in the
+ * OG image.
+ */
+const [lead, ...rest] = visible;
+const showLead = visible.length > 4;
+const tiles = showLead ? rest : visible;
 ---
 
 <div class="service-grid">
-  {visible.map((service) => (
+  {showLead && (
+    <article class="service-card lead-card">
+      <a href={`/services/${lead.slug}/`} aria-label={`Learn more about ${lead.title}`}>
+        <div class="plate">
+          <SmartImage
+            src={lead.image}
+            alt={`${lead.shortTitle} by Chinmayi Events`}
+            sizes="(max-width: 920px) 100vw, 46vw"
+            widths={[400, 800, 1200]}
+            width="900"
+            height="620"
+          />
+        </div>
+        <h3 class="card-title">{lead.shortTitle}</h3>
+        <div class="body">
+          <p>{lead.description}</p>
+          <ul class="highlights">
+            {lead.highlights.map((point) => (
+              <li>{point}</li>
+            ))}
+          </ul>
+          <span class="cta">Explore service<i aria-hidden="true"></i></span>
+        </div>
+      </a>
+    </article>
+  )}
+
+  {tiles.map((service) => (
     <article class="service-card">
       <a href={`/services/${service.slug}/`} aria-label={`Learn more about ${service.title}`}>
-        <SmartImage
-          src={service.image}
-          alt={`${service.shortTitle} by Chinmayi Events`}
-          sizes="(max-width: 620px) 100vw, (max-width: 920px) 50vw, 33vw"
-          widths={[400, 800, 1200]}
-          width="720"
-          height="520"
-        />
-        <div class="service-body">
-          <h3>{service.shortTitle}</h3>
+        <div class="plate">
+          <SmartImage
+            src={service.image}
+            alt={`${service.shortTitle} by Chinmayi Events`}
+            sizes="(max-width: 620px) 128px, (max-width: 920px) 50vw, 33vw"
+            widths={[400, 800, 1200]}
+            width="720"
+            height="500"
+          />
+        </div>
+        <h3 class="card-title">{service.shortTitle}</h3>
+        <div class="body">
           <p>{service.description}</p>
-          <span>Explore service</span>
+          <span class="cta">Explore service<i aria-hidden="true"></i></span>
         </div>
       </a>
     </article>
@@ -32,87 +72,349 @@ const visible = limit ? services.slice(0, limit) : services;
   .service-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 22px;
+    gap: 20px;
   }
 
   .service-card {
+    display: flex;
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 3px;
+    background: var(--paper);
     overflow: hidden;
-    background: #fff;
-    box-shadow: 0 16px 44px rgba(38, 23, 15, 0.07);
+    box-shadow: 0 10px 28px rgba(38, 23, 15, 0.06);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
   }
 
-  .service-card :global(img) {
+  /*
+   * The plate and the title share grid cell 1/1 so the title can sit over the
+   * photograph on desktop while staying a normal sibling in the DOM — which is
+   * what lets it drop beside the image on phones without duplicating markup.
+   */
+  .service-card > a {
+    display: grid;
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  .service-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(217, 173, 82, 0.55);
+    box-shadow: 0 20px 44px rgba(38, 23, 15, 0.12);
+  }
+
+  .plate {
+    position: relative;
+    grid-area: 1 / 1 / 2 / 2;
+    aspect-ratio: 1.45;
+    overflow: hidden;
+    background: var(--soft);
+  }
+
+  .plate :global(img) {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    aspect-ratio: 1.28;
+    height: 100%;
     object-fit: cover;
-    transition: transform 260ms ease;
+    transition: transform 320ms ease;
   }
 
-  .service-card a {
-    display: block;
-    overflow: hidden;
+  .service-card:hover .plate :global(img) {
+    transform: scale(1.05);
   }
 
-  .service-card:hover :global(img) {
-    transform: scale(1.04);
+  .plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 38%, rgba(28, 15, 11, 0.86));
+    transition: background 200ms ease;
   }
 
-  .service-body {
-    padding: 22px;
+  .service-card:hover .plate::after {
+    background: linear-gradient(180deg, rgba(28, 15, 11, 0.1), rgba(28, 15, 11, 0.9));
   }
 
-  h3 {
-    margin-bottom: 10px;
-    font-size: 1.45rem;
+  .card-title {
+    grid-area: 1 / 1 / 2 / 2;
+    z-index: 1;
+    align-self: end;
+    margin: 0;
+    padding: 16px 18px;
+    color: #fff8ec;
+    font-size: 1.42rem;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.42);
   }
 
-  p {
-    min-height: 84px;
+  /* Gold hairline reads as the divider the rest of the site uses. */
+  .body {
+    position: relative;
+    grid-area: 2 / 1 / 3 / 2;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+  }
+
+  .body p {
+    margin: 0;
     color: var(--muted);
+    font-size: 0.95rem;
   }
 
-  span {
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: auto;
     color: var(--maroon);
-    font-weight: 850;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cta i {
+    width: 22px;
+    height: 1px;
+    background: var(--gold-dark);
+    transition: width 200ms ease;
+  }
+
+  .service-card:hover .cta i {
+    width: 34px;
+  }
+
+  /* Full-width lead card: image beside the copy instead of above it. */
+  .lead-card {
+    grid-column: 1 / -1;
+  }
+
+  .service-card.lead-card > a {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .lead-card .plate {
+    aspect-ratio: auto;
+    min-height: 300px;
+  }
+
+  .lead-card .card-title {
+    padding: 22px 24px;
+    font-size: 1.9rem;
+  }
+
+  .lead-card .body {
+    grid-area: 1 / 2 / 2 / 3;
+    gap: 16px;
+    padding: 30px 32px;
+    justify-content: center;
+  }
+
+  .lead-card .body p {
+    font-size: 1.02rem;
+  }
+
+  .highlights {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .highlights li {
+    position: relative;
+    padding-left: 20px;
+    color: var(--ink);
+    font-size: 0.92rem;
+  }
+
+  .highlights li::before {
+    content: "";
+    position: absolute;
+    top: 0.55em;
+    left: 0;
+    width: 9px;
+    height: 1px;
+    background: var(--gold-dark);
   }
 
   @media (max-width: 920px) {
     .service-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .service-card.lead-card > a {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+    }
+
+    .lead-card .plate {
+      aspect-ratio: 1.9;
+      min-height: 0;
+    }
+
+    .lead-card .body {
+      grid-area: 2 / 1 / 3 / 2;
+      padding: 24px;
+    }
   }
 
+  /*
+   * Phones get a list, not a stack of posters. Thirteen full-bleed cards ran to
+   * roughly five screens of scrolling; as rows with a square thumbnail the same
+   * thirteen services fit in about one and a half, and stay scannable.
+   */
   @media (max-width: 620px) {
     .service-grid {
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 10px;
     }
 
-    .service-card :global(img) {
+    /*
+     * The thumbnail tracks viewport width so the copy column keeps a usable
+     * measure on a 360px phone, where a fixed 116px strip would leave the
+     * clamped description barely twenty characters wide.
+     */
+    .service-card > a {
+      grid-template-columns: clamp(92px, 26vw, 116px) minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .plate {
+      grid-area: 1 / 1 / 3 / 2;
+      aspect-ratio: auto;
+      min-height: 112px;
+    }
+
+    /* No text sits on the photo in list mode, so the scrim would only mute it. */
+    .plate::after,
+    .service-card:hover .plate::after {
+      background: none;
+    }
+
+    .card-title {
+      grid-area: 1 / 2 / 2 / 3;
+      align-self: start;
+      padding: 13px 14px 0;
+      color: var(--ink);
+      font-size: 1.08rem;
+      text-shadow: none;
+    }
+
+    .body {
+      grid-area: 2 / 2 / 3 / 3;
+      gap: 0;
+      padding: 5px 14px 13px;
+    }
+
+    .body::before {
+      display: none;
+    }
+
+    .body p {
+      display: -webkit-box;
+      overflow: hidden;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+    }
+
+    /* The whole row is the tap target, so the label is redundant weight. */
+    .cta {
+      display: none;
+    }
+
+    .service-card::after {
+      content: "";
+      align-self: center;
+      width: 7px;
+      height: 7px;
+      margin-right: 14px;
+      border-top: 1.5px solid var(--gold-dark);
+      border-right: 1.5px solid var(--gold-dark);
+      transform: rotate(45deg);
+    }
+
+    /* The flagship keeps its poster treatment above the list. */
+    .lead-card {
+      margin-bottom: 6px;
+    }
+
+    .service-card.lead-card > a {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto;
+    }
+
+    .lead-card .plate {
+      grid-area: 1 / 1 / 2 / 2;
       aspect-ratio: 1.6;
-    }
-
-    .service-body {
-      padding: 18px;
-    }
-
-    h3 {
-      font-size: 1.28rem;
-    }
-
-    p {
       min-height: 0;
-      font-size: 0.94rem;
     }
 
-    /* Give the whole card an obvious tap affordance on touch devices. */
-    span {
+    .lead-card .plate::after {
+      background: linear-gradient(180deg, transparent 38%, rgba(28, 15, 11, 0.86));
+    }
+
+    .lead-card .card-title {
+      grid-area: 1 / 1 / 2 / 2;
+      align-self: end;
+      padding: 14px 16px;
+      color: #fff8ec;
+      font-size: 1.4rem;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.42);
+    }
+
+    .lead-card .body {
+      grid-area: 2 / 1 / 3 / 2;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .lead-card .body::before {
+      display: block;
+    }
+
+    .lead-card .body p {
+      display: block;
+      font-size: 0.94rem;
+      overflow: visible;
+    }
+
+    .lead-card .cta {
       display: inline-flex;
-      align-items: center;
       min-height: 44px;
-      margin-top: 4px;
+    }
+
+    .lead-card::after {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card,
+    .service-card:hover,
+    .plate :global(img),
+    .service-card:hover .plate :global(img),
+    .cta i {
+      transition: none;
+      transform: none;
     }
   }
 </style>

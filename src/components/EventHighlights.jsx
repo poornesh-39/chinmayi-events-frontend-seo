@@ -11,7 +11,7 @@ const IMAGE_STORY_DURATION = 4500;
 const fallbackHighlight = {
   _id: 'fallback-highlight',
   title: 'Wedding event highlight decoration by Chinmayi Events',
-  cloudinaryUrl: '/images/opt/chikkamagaluru-gallery-night-stage-10-800.webp',
+  cloudinaryUrl: '/images/opt/chikkamagaluru-cradle-ceremony-decoration-800.webp',
   mediaType: 'image'
 };
 

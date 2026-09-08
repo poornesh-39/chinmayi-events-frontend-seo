@@ -17,8 +17,8 @@ export const site = {
   country: 'IN',
   instagram: 'https://www.instagram.com/chinmayi_events/',
   logo: '/images/chinmayi-events-logo.jpeg',
-  heroImage: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
-  ogImage: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
+  heroImage: '/images/chikkamagaluru-floral-vase-arrangement-decor.jpg',
+  ogImage: '/images/chikkamagaluru-wedding-hall-floral-stage.jpeg',
 
   /**
    * Pin coordinates for the "Chinmayi Events" Google Business Profile listing,
@@ -113,6 +113,7 @@ export const eventTypes = [
   ['vehicle', 'Vehicle Decoration'],
   ['birthday', 'Birthday'],
   ['naming-ceremony', 'Naming Ceremony'],
+  ['baby-shower', 'Baby Shower'],
   ['corporate', 'Corporate'],
   ['other', 'Other']
 ];
@@ -153,7 +154,7 @@ export const services = [
     shortTitle: 'Wedding Decoration',
     description:
       'Elegant mandap, entrance, floral, seating and complete wedding venue decoration for families in and around Chikkamagaluru.',
-    image: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
+    image: '/images/chikkamagaluru-wedding-hall-floral-stage.jpeg',
     keywords:
       'wedding decoration Chikkamagaluru, mandap decoration Chikkamagaluru, wedding decorators near me',
     highlights: [
@@ -183,7 +184,7 @@ export const services = [
     shortTitle: 'Birthday Decor',
     description:
       'Colorful birthday setups, cake table styling, balloon decor, kids themes and family celebration decoration.',
-    image: '/images/chikkamagaluru-birthday-cake-table-decoration.jpg',
+    image: '/images/chikkamagaluru-birthday-balloon-arch-backdrop.jpeg',
     keywords:
       'birthday decoration Chikkamagaluru, birthday decorators near me, cake table decoration',
     highlights: [
@@ -198,7 +199,7 @@ export const services = [
     shortTitle: 'Engagement Decor',
     description:
       'Elegant engagement, ring ceremony and pre-wedding decor with floral stages, backdrops and intimate styling.',
-    image: '/images/chikkamagaluru-engagement-decoration.jpeg',
+    image: '/images/chikkamagaluru-reception-stage-floral-backdrop.jpeg',
     keywords:
       'engagement decoration Chikkamagaluru, ring ceremony decoration Chikkamagaluru',
     highlights: [
@@ -228,7 +229,7 @@ export const services = [
     shortTitle: 'Event Management',
     description:
       'End-to-end event setup in Chikkamagaluru: decoration design, stage and seating, shamiyana, lighting and on-day setup coordination for weddings, family functions and corporate events.',
-    image: '/images/chikkamagaluru-custom-event-design.jpeg',
+    image: '/images/chikkamagaluru-outdoor-tent-carpet-aisle-setup.jpeg',
     keywords:
       'event management Chikkamagaluru, event organisers Chikkamagaluru, event planners near me, event management near me',
     highlights: [
@@ -243,7 +244,7 @@ export const services = [
     shortTitle: 'Haldi Decor',
     description:
       'Bright marigold and floral haldi setups, seating, backdrops and photo corners for pre-wedding ceremonies at home or at the venue.',
-    image: '/images/chikkamagaluru-gallery-floral-stage-17.jpeg',
+    image: '/images/chikkamagaluru-haldi-marigold-backdrop-urli.jpeg',
     keywords:
       'haldi decoration Chikkamagaluru, pre wedding decoration Chikkamagaluru, haldi decorators near me',
     highlights: [
@@ -258,7 +259,7 @@ export const services = [
     shortTitle: 'Naming Ceremony',
     description:
       'Warm, traditional naming ceremony and cradle ceremony decoration with floral backdrops, cradle styling and soft colour themes.',
-    image: '/images/chikkamagaluru-gallery-floral-entrance-13.jpeg',
+    image: '/images/chikkamagaluru-naming-ceremony-stage-decoration.jpeg',
     keywords:
       'naming ceremony decoration Chikkamagaluru, cradle ceremony decoration, namakarana decoration Chikkamagaluru',
     highlights: [
@@ -273,7 +274,7 @@ export const services = [
     shortTitle: 'Housewarming',
     description:
       'Griha pravesha and housewarming decoration with entrance work, floral arrangements, rangoli-friendly layouts and pooja area styling.',
-    image: '/images/chikkamagaluru-event-centerpiece-decoration.avif',
+    image: '/images/chikkamagaluru-home-function-hanging-floral-backdrop.jpeg',
     keywords:
       'housewarming decoration Chikkamagaluru, griha pravesha decoration Chikkamagaluru, house warming decorators near me',
     highlights: [
@@ -288,7 +289,7 @@ export const services = [
     shortTitle: 'Outdoor Events',
     description:
       'Lawn, garden, estate and open-ground event decoration with weather-aware staging, lighting and guest seating for outdoor celebrations.',
-    image: '/images/chikkamagaluru-gallery-outdoor-decor-5.jpeg',
+    image: '/images/chikkamagaluru-outdoor-floral-entrance-arch.jpeg',
     keywords:
       'outdoor event decoration Chikkamagaluru, lawn wedding decoration Chikkamagaluru, garden event decorators',
     highlights: [
@@ -303,7 +304,7 @@ export const services = [
     shortTitle: 'Corporate Events',
     description:
       'Clean, professional decoration for corporate functions, inaugurations, annual days and office celebrations, with stage, backdrop and lighting setup.',
-    image: '/images/chikkamagaluru-gallery-event-lighting-18.jpeg',
+    image: '/images/chikkamagaluru-event-centerpiece-decoration.avif',
     keywords:
       'corporate event decoration Chikkamagaluru, office event decorators Chikkamagaluru, inauguration decoration',
     highlights: [
@@ -346,8 +347,8 @@ export const services = [
 
 export const galleryHighlights = [
   {
-    src: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
-    alt: 'Wedding stage decoration by Chinmayi Events in Chikkamagaluru',
+    src: '/images/chikkamagaluru-wedding-hall-floral-stage.jpeg',
+    alt: 'Wedding hall stage with a full floral wall by Chinmayi Events in Chikkamagaluru',
     title: 'Wedding Stage'
   },
   {
@@ -366,14 +367,14 @@ export const galleryHighlights = [
     title: 'Guest Setup'
   },
   {
-    src: '/images/chikkamagaluru-birthday-cake-table-decoration.jpg',
-    alt: 'Birthday cake table decoration in Chikkamagaluru',
+    src: '/images/chikkamagaluru-birthday-balloon-arch-backdrop.jpeg',
+    alt: 'Birthday balloon arch backdrop with a cake pedestal in Chikkamagaluru',
     title: 'Birthday Decor'
   },
   {
-    src: '/images/chikkamagaluru-custom-event-design.jpeg',
-    alt: 'Custom event design and decoration by Chinmayi Events',
-    title: 'Custom Design'
+    src: '/images/chikkamagaluru-naming-ceremony-stage-decoration.jpeg',
+    alt: 'Naming ceremony stage decoration by Chinmayi Events',
+    title: 'Naming Ceremony'
   }
 ];
 
