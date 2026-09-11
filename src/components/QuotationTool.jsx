@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { apiUrl, eventTypes } from '../data/site.js';
+import { eventTypes } from '../data/site.js';
+import { authFetch } from '../data/adminAuth.js';
 
 const createItem = (id) => ({
   id,
@@ -126,7 +127,7 @@ export default function QuotationTool() {
       let matchedQuotationNumber = quotationNumber;
 
       for (const candidate of quotationSearchCandidates(quotationNumber)) {
-        const response = await fetch(`${apiUrl}/api/quotation/${encodeURIComponent(candidate)}`);
+        const response = await authFetch(`/api/quotation/${encodeURIComponent(candidate)}`);
         if (response.ok) {
           data = await response.json();
           matchedQuotationNumber = candidate;
@@ -168,10 +169,10 @@ export default function QuotationTool() {
     }
 
     const endpoint = isEditMode
-      ? `${apiUrl}/api/quotation/${encodeURIComponent(currentQuotationNumber)}`
-      : `${apiUrl}/api/quotation/save`;
+      ? `/api/quotation/${encodeURIComponent(currentQuotationNumber)}`
+      : '/api/quotation/save';
 
-    const response = await fetch(endpoint, {
+    const response = await authFetch(endpoint, {
       method: isEditMode ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(quotationPayload(isEditMode ? currentQuotationNumber : ''))
@@ -185,7 +186,7 @@ export default function QuotationTool() {
   };
 
   const downloadPdf = async (quotationNumber) => {
-    const response = await fetch(`${apiUrl}/api/quotation/generate-pdf`, {
+    const response = await authFetch('/api/quotation/generate-pdf', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(quotationPayload(quotationNumber))
