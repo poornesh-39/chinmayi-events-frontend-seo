@@ -8,6 +8,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 
 const PLACEHOLDERS = [
+  'localhost',
   'your-new-netlify-site.netlify.app',
   'your-render-backend-url.onrender.com',
   'your-site-url-here'

@@ -24,9 +24,7 @@ export default function LiveGallery({ initialItems = [] }) {
   useEffect(() => {
     const controller = new AbortController();
 
-    // TODO: switch to a dedicated public endpoint once the backend adds one —
-    // this admin route should not be readable without auth.
-    fetch(`${apiUrl}/api/gallery/admin/all`, { signal: controller.signal })
+    fetch(`${apiUrl}/api/gallery/all`, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) throw new Error(`Gallery unavailable (${response.status})`);
         return response.json();

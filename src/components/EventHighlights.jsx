@@ -72,7 +72,7 @@ export default function EventHighlights({ initialHighlights = [] }) {
       }
 
       try {
-        const response = await fetch(`${apiUrl}/api/gallery/admin/all`);
+        const response = await fetch(`${apiUrl}/api/gallery/all`);
         if (!response.ok) throw new Error('Could not load gallery fallback');
         const data = await response.json();
         const galleryItems = normalizeHighlights(data.galleries);

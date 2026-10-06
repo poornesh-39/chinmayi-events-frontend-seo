@@ -77,7 +77,7 @@ export const getExperiences = async () => {
  * @returns {Promise<GalleryItem[]>}
  */
 export const getGalleryItems = async () => {
-  const data = await getJson('/api/gallery/admin/all');
+  const data = await getJson('/api/gallery/all');
   const galleries = Array.isArray(data?.galleries) ? data.galleries : [];
 
   const rank = (item) => {
