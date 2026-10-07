@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react';
-import { apiUrl, cloudinaryVideoThumb, eventTypes } from '../data/site.js';
+import { cloudinaryVideoThumb, eventTypes } from '../data/site.js';
+import { authFetch, login as signIn, logout as signOut, restoreSession } from '../data/adminAuth.js';
 import QuotationTool from './QuotationTool.jsx';
+import LeadsPanel from './LeadsPanel.jsx';
 import './AdminPanel.css';
-
-const credentials = {
-  email: 'admin@chinmayievents.com',
-  password: 'admin123'
-};
 
 const categories = eventTypes;
 
 const videoThumb = (url) => cloudinaryVideoThumb(url, 720);
 
+// Below this width, opening the original media in a new tab is clumsy on a
+// phone browser — show it in an in-page lightbox instead. Matches the
+// breakpoint the gallery card layout itself switches on.
+const MOBILE_PREVIEW_QUERY = '(max-width: 720px)';
+
 export default function AdminPanel() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [admin, setAdmin] = useState(null);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('gallery');
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
+  const [previewItem, setPreviewItem] = useState(null);
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -27,33 +32,67 @@ export default function AdminPanel() {
     file: null
   });
 
+  // A rejected token means the session is gone; drop straight back to the form.
+  const handleAuthError = (error) => {
+    if (error?.name === 'UnauthorizedError') {
+      setAdmin(null);
+      setStatus(error.message);
+      return true;
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    restoreSession().then((session) => {
+      if (cancelled) return;
+      setAdmin(session);
+      setCheckingSession(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const loadGallery = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${apiUrl}/api/gallery/admin/all`);
+      const response = await authFetch('/api/gallery/admin/all');
       if (!response.ok) throw new Error('Could not load gallery');
       const data = await response.json();
       setItems(data.galleries || []);
       setStatus('');
-    } catch {
-      setStatus('Could not load gallery media.');
+    } catch (error) {
+      if (!handleAuthError(error)) setStatus('Could not load gallery media.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (loggedIn && activeTab === 'gallery') loadGallery();
-  }, [loggedIn, activeTab]);
+    if (admin && activeTab === 'gallery') loadGallery();
+  }, [admin, activeTab]);
 
-  const login = (event) => {
+  const login = async (event) => {
     event.preventDefault();
-    if (email === credentials.email && password === credentials.password) {
-      setLoggedIn(true);
+    setLoading(true);
+    try {
+      setAdmin(await signIn(email, password));
+      setPassword('');
       setStatus('');
-    } else {
-      setStatus('Invalid admin credentials.');
+    } catch (error) {
+      setStatus(error.message || 'Could not sign in.');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const logout = () => {
+    signOut();
+    setAdmin(null);
+    setItems([]);
+    setActiveTab('gallery');
+    setStatus('');
   };
 
   const updateForm = (event) => {
@@ -80,7 +119,7 @@ export default function AdminPanel() {
     setLoading(true);
     setStatus('Uploading to Cloudinary...');
     try {
-      const response = await fetch(`${apiUrl}/api/gallery/upload`, {
+      const response = await authFetch('/api/gallery/upload', {
         method: 'POST',
         body
       });
@@ -89,8 +128,10 @@ export default function AdminPanel() {
       event.target.reset();
       setStatus('Media uploaded successfully.');
       await loadGallery();
-    } catch {
-      setStatus('Upload failed. Check file size, type and backend Cloudinary env.');
+    } catch (error) {
+      if (!handleAuthError(error)) {
+        setStatus('Upload failed. Check file size, type and backend Cloudinary env.');
+      }
     } finally {
       setLoading(false);
     }
@@ -99,15 +140,17 @@ export default function AdminPanel() {
   const toggleHighlight = async (id) => {
     setLoading(true);
     try {
-      const response = await fetch(`${apiUrl}/api/gallery/${id}/highlight`, {
+      const response = await authFetch(`/api/gallery/${id}/highlight`, {
         method: 'PUT'
       });
       if (!response.ok) throw new Error('Highlight update failed');
       const data = await response.json();
       setItems((current) => current.map((item) => (item._id === id ? data.gallery : item)));
       setStatus(data.message || 'Highlight updated.');
-    } catch {
-      setStatus('Could not update highlight. Deploy the latest backend changes first.');
+    } catch (error) {
+      if (!handleAuthError(error)) {
+        setStatus('Could not update highlight. Deploy the latest backend changes first.');
+      }
     } finally {
       setLoading(false);
     }
@@ -117,20 +160,52 @@ export default function AdminPanel() {
     if (!confirm('Delete this gallery media?')) return;
     setLoading(true);
     try {
-      const response = await fetch(`${apiUrl}/api/gallery/${id}`, {
+      const response = await authFetch(`/api/gallery/${id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Delete failed');
       setItems((current) => current.filter((item) => item._id !== id));
       setStatus('Media deleted.');
-    } catch {
-      setStatus('Delete failed.');
+    } catch (error) {
+      if (!handleAuthError(error)) setStatus('Delete failed.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (!loggedIn) {
+  const openMediaPreview = (event, item) => {
+    if (typeof window !== 'undefined' && window.matchMedia(MOBILE_PREVIEW_QUERY).matches) {
+      event.preventDefault();
+      setPreviewItem(item);
+    }
+    // Otherwise let the anchor's default behaviour open the original file in a new tab.
+  };
+
+  useEffect(() => {
+    if (!previewItem) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setPreviewItem(null);
+    };
+
+    document.body.classList.add('modal-open');
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.classList.remove('modal-open');
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [previewItem]);
+
+  if (checkingSession) {
+    return (
+      <section className="admin-shell">
+        <p className="admin-status">Checking your session...</p>
+      </section>
+    );
+  }
+
+  if (!admin) {
     return (
       <section className="admin-shell">
         <form className="admin-login" onSubmit={login}>
@@ -138,13 +213,50 @@ export default function AdminPanel() {
           <h1>Chinmayi Events Admin</h1>
           <label>
             <span>Email</span>
-            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+            <input
+              type="email"
+              autoComplete="username"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
           </label>
           <label>
             <span>Password</span>
-            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+            <div className="password-field">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword((shown) => !shown)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+                title={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  // Eye with a slash through it — currently visible, click to hide.
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 3l18 18" />
+                    <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                    <path d="M9.4 5.2A9.5 9.5 0 0 1 12 4.9c4.6 0 8.1 3.4 9.4 7.1a12 12 0 0 1-2.4 3.7" />
+                    <path d="M6.2 6.8A12.3 12.3 0 0 0 2.6 12c1.3 3.7 4.8 7.1 9.4 7.1 1.7 0 3.2-.4 4.5-1.1" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2.6 12C3.9 8.3 7.4 4.9 12 4.9s8.1 3.4 9.4 7.1c-1.3 3.7-4.8 7.1-9.4 7.1S3.9 15.7 2.6 12Z" />
+                    <circle cx="12" cy="12" r="2.6" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </label>
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Login'}</button>
           {status && <p className="admin-status">{status}</p>}
         </form>
       </section>
@@ -157,14 +269,21 @@ export default function AdminPanel() {
         <div>
           <p className="eyebrow">Dashboard</p>
           <h1>Chinmayi Events Admin</h1>
+          <p className="admin-whoami">Signed in as {admin.email}</p>
         </div>
-        <a href="/">Back to website</a>
+        <div className="admin-top-actions">
+          <a href="/">Back to website</a>
+          <button type="button" className="admin-signout" onClick={logout}>Sign out</button>
+        </div>
       </div>
 
       <div className="admin-tabs">
+        <button className={activeTab === 'leads' ? 'active' : ''} onClick={() => setActiveTab('leads')}>Enquiries</button>
         <button className={activeTab === 'gallery' ? 'active' : ''} onClick={() => setActiveTab('gallery')}>Gallery</button>
         <button className={activeTab === 'quotations' ? 'active' : ''} onClick={() => setActiveTab('quotations')}>Quotations</button>
       </div>
+
+      {activeTab === 'leads' && <LeadsPanel onAuthError={handleAuthError} />}
 
       {activeTab === 'gallery' && (
         <div className="admin-grid">
@@ -206,23 +325,55 @@ export default function AdminPanel() {
               {items.map((item) => (
                 <article key={item._id}>
                   <div className="media-preview">
-                    <img src={item.mediaType === 'video' ? videoThumb(item.cloudinaryUrl) : item.cloudinaryUrl} alt={item.title} />
+                    <a
+                      className="media-preview-link"
+                      href={item.cloudinaryUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => openMediaPreview(event, item)}
+                      aria-label={`Open full-size ${item.mediaType === 'video' ? 'video' : 'photo'}: ${item.title}`}
+                    >
+                      <img src={item.mediaType === 'video' ? videoThumb(item.cloudinaryUrl) : item.cloudinaryUrl} alt={item.title} />
+                      {item.mediaType === 'video' && <span className="media-play-badge" aria-hidden="true" />}
+                    </a>
                     {item.isHighlight && <span className="highlight-badge">Highlight</span>}
-                  </div>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.eventCategory} - {item.mediaType}</p>
-                    <div className="media-actions">
+                    <div className="media-icon-actions">
                       <button
                         type="button"
                         className={item.isHighlight ? 'highlight-btn active' : 'highlight-btn'}
                         onClick={() => toggleHighlight(item._id)}
                         disabled={loading}
+                        title={item.isHighlight ? 'Remove Highlight' : 'Set Highlight'}
                       >
-                        {item.isHighlight ? 'Remove Highlight' : 'Set Highlight'}
+                        <svg className="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3Z"
+                            fill={item.isHighlight ? 'currentColor' : 'none'}
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span className="btn-label">{item.isHighlight ? 'Remove Highlight' : 'Set Highlight'}</span>
                       </button>
-                      <button type="button" className="delete-btn" onClick={() => deleteItem(item._id)} disabled={loading}>Delete</button>
+                      <button type="button" className="delete-btn" onClick={() => deleteItem(item._id)} disabled={loading} title="Delete">
+                        <svg className="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-8 0 1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.7"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span className="btn-label">Delete</span>
+                      </button>
                     </div>
+                  </div>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.eventCategory} - {item.mediaType}</p>
                   </div>
                 </article>
               ))}
@@ -232,6 +383,30 @@ export default function AdminPanel() {
       )}
 
       {activeTab === 'quotations' && <QuotationTool />}
+
+      {previewItem && (
+        <div className="media-lightbox" role="dialog" aria-modal="true" aria-label={previewItem.title}>
+          <button
+            type="button"
+            className="media-lightbox-backdrop"
+            onClick={() => setPreviewItem(null)}
+            aria-label="Close preview"
+          />
+          <div className="media-lightbox-panel">
+            <button type="button" className="media-lightbox-close" onClick={() => setPreviewItem(null)} aria-label="Close preview">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+            {previewItem.mediaType === 'video' ? (
+              <video src={previewItem.cloudinaryUrl} controls autoPlay playsInline />
+            ) : (
+              <img src={previewItem.cloudinaryUrl} alt={previewItem.title} />
+            )}
+            <p className="media-lightbox-title">{previewItem.title}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

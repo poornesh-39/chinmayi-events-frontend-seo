@@ -1,32 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { apiUrl, cloudinaryVideoThumb, eventTypes, site } from '../data/site.js';
+import { apiUrl, eventTypes } from '../data/site.js';
 import './TestimonialsPanel.css';
 
-const fallbackReviews = [
-  {
-    _id: 'fallback-1',
-    fullName: 'Ankita & Rohan',
-    eventType: 'wedding',
-    rating: 5,
-    experience:
-      'Chinmayi Events made our wedding absolutely magical. Every detail was perfect and exactly what we dreamed of.'
-  },
-  {
-    _id: 'fallback-2',
-    fullName: 'Pooja R',
-    eventType: 'reception',
-    rating: 5,
-    experience:
-      'Excellent work. The decoration was beyond our expectations. Highly recommended.'
-  }
-];
-
-const fallbackHighlight = {
-  _id: 'fallback-highlight',
-  title: 'Wedding event highlight decoration by Chinmayi Events',
-  cloudinaryUrl: '/images/opt/chikkamagaluru-gallery-night-stage-10-800.webp',
-  mediaType: 'image'
-};
+/**
+ * Deliberately empty. This used to hold two invented testimonials, which the
+ * island server-rendered into the homepage — so the reviews Google indexed
+ * were written copy, not customers. Real reviews are now fetched at build time
+ * and passed in via `initialReviews`; if none are available the block simply
+ * does not render.
+ */
+const fallbackReviews = [];
 
 const initialForm = {
   fullName: '',
@@ -36,17 +19,6 @@ const initialForm = {
 };
 
 const stars = (rating) => Array.from({ length: Math.max(1, Math.min(5, Number(rating) || 1)) }, () => '★').join(' ');
-
-const videoThumb = (url) => cloudinaryVideoThumb(url, 960);
-
-const getMediaSrc = (highlight) => highlight?.cloudinaryUrl || fallbackHighlight.cloudinaryUrl;
-const getMediaTitle = (highlight) => highlight?.title || fallbackHighlight.title;
-const getPreviewSrc = (highlight) => (highlight?.mediaType === 'video' ? videoThumb(getMediaSrc(highlight)) : getMediaSrc(highlight));
-
-const normalizeHighlights = (items) => {
-  if (!Array.isArray(items)) return [];
-  return items.filter((item) => item?.cloudinaryUrl).slice(0, 8);
-};
 
 const ReviewCard = ({ review, label, compact = false }) => (
   <article className={`review-card-live ${compact ? 'compact' : ''}`}>
@@ -61,42 +33,31 @@ const ReviewCard = ({ review, label, compact = false }) => (
   </article>
 );
 
-const HighlightPreview = ({ highlight }) => (
-  <>
-    <img src={getPreviewSrc(highlight)} alt={getMediaTitle(highlight)} loading="lazy" />
-    <span>{highlight?.mediaType === 'video' ? 'Play' : 'View'}</span>
-    <strong>{getMediaTitle(highlight)}</strong>
-  </>
-);
-
-const ModalMedia = ({ highlight }) => {
-  const src = getMediaSrc(highlight);
-  const title = getMediaTitle(highlight);
-
-  if (highlight?.mediaType === 'video') {
-    return <video src={src} poster={videoThumb(src)} controls autoPlay preload="metadata" aria-label={title} />;
-  }
-
-  return <img src={src} alt={title} />;
-};
-
-export default function TestimonialsPanel() {
-  const [reviews, setReviews] = useState(fallbackReviews);
-  const [highlights, setHighlights] = useState([fallbackHighlight]);
+/**
+ * `initialReviews` is fetched at build time in index.astro so the
+ * testimonials exist in the static HTML. The mount-time loader below still
+ * runs and picks up anything newer.
+ *
+ * @param {{ initialReviews?: any[] }} props
+ */
+export default function TestimonialsPanel({ initialReviews = [] }) {
+  const [reviews, setReviews] = useState(
+    initialReviews.length > 0 ? initialReviews : fallbackReviews
+  );
   const [form, setForm] = useState(initialForm);
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [highlightIndex, setHighlightIndex] = useState(0);
-  const [modalOpen, setModalOpen] = useState(false);
 
   const visibleReviews = reviews.slice(0, 8);
-  const activeReview = visibleReviews[activeIndex] || fallbackReviews[0];
-  const nextReview = visibleReviews[(activeIndex + 1) % visibleReviews.length] || fallbackReviews[1] || activeReview;
-  const activeHighlight = highlights[highlightIndex] || fallbackHighlight;
+  const activeReview = visibleReviews[activeIndex] || visibleReviews[0] || null;
+  const nextReview =
+    visibleReviews.length > 1
+      ? visibleReviews[(activeIndex + 1) % visibleReviews.length]
+      : null;
 
   const averageRating = useMemo(() => {
-    if (!reviews.length) return '5.0';
+    if (!reviews.length) return null;
     const total = reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0);
     return (total / reviews.length).toFixed(1);
   }, [reviews]);
@@ -115,44 +76,8 @@ export default function TestimonialsPanel() {
     }
   };
 
-  const loadHighlights = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/api/gallery/highlights`);
-      if (!response.ok) throw new Error('Could not load highlights');
-      const data = await response.json();
-      const selected = normalizeHighlights(data.highlights);
-      if (selected.length > 0) {
-        setHighlights(selected);
-        setHighlightIndex(0);
-        return;
-      }
-    } catch {
-      // Fall through to the admin gallery fallback while the new backend route is not live.
-    }
-
-    try {
-      const response = await fetch(`${apiUrl}/api/gallery/admin/all`);
-      if (!response.ok) throw new Error('Could not load gallery fallback');
-      const data = await response.json();
-      const galleryItems = normalizeHighlights(data.galleries);
-      const selected = galleryItems.filter((item) => item.isHighlight);
-      const fallbackItems = selected.length > 0 ? selected : galleryItems.slice(0, 6);
-      if (fallbackItems.length > 0) {
-        setHighlights(fallbackItems);
-        setHighlightIndex(0);
-        return;
-      }
-    } catch {
-      // Keep the static fallback image.
-    }
-
-    setHighlights([fallbackHighlight]);
-    setHighlightIndex(0);
-  };
-
   useEffect(() => {
     loadReviews();
-    loadHighlights();
   }, []);
 
   useEffect(() => {
@@ -164,34 +89,6 @@ export default function TestimonialsPanel() {
 
     return () => window.clearInterval(timer);
   }, [visibleReviews.length]);
-
-  useEffect(() => {
-    if (highlights.length <= 1 || modalOpen) return undefined;
-
-    const timer = window.setInterval(() => {
-      setHighlightIndex((current) => (current + 1) % highlights.length);
-    }, 5200);
-
-    return () => window.clearInterval(timer);
-  }, [highlights.length, modalOpen]);
-
-  useEffect(() => {
-    if (!modalOpen) return undefined;
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') setModalOpen(false);
-      if (event.key === 'ArrowRight') setHighlightIndex((current) => (current + 1) % highlights.length);
-      if (event.key === 'ArrowLeft') setHighlightIndex((current) => (current - 1 + highlights.length) % highlights.length);
-    };
-
-    document.body.classList.add('modal-open');
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.classList.remove('modal-open');
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [modalOpen, highlights.length]);
 
   const updateForm = (event) => {
     const { name, value } = event.target;
@@ -227,14 +124,6 @@ export default function TestimonialsPanel() {
     }
   };
 
-  const showPreviousHighlight = () => {
-    setHighlightIndex((current) => (current - 1 + highlights.length) % highlights.length);
-  };
-
-  const showNextHighlight = () => {
-    setHighlightIndex((current) => (current + 1) % highlights.length);
-  };
-
   return (
     <div className="testimonials-panel">
       <div className="testimonials-head centered">
@@ -243,67 +132,33 @@ export default function TestimonialsPanel() {
           <h2>What Our Clients Say</h2>
 
         </div>
-        <div className="rating-summary">
-          <strong>{averageRating}</strong>
-          <span>★ ★ ★ ★ ★</span>
-          <small>Customer rating</small>
-        </div>
-      </div>
-
-      <div className="proof-showcase" aria-label="Customer testimonials and event highlight">
-        <div className="highlight-showcase-block">
-          <article className="highlight-card-center">
-            <p className="eyebrow">Event highlights</p>
-            <h3>Moments That Last Forever</h3>
-            <button
-              type="button"
-              className="video-tile-live highlight-open-button"
-              onClick={() => setModalOpen(true)}
-              aria-label="Open Chinmayi Events highlights"
-            >
-              <HighlightPreview highlight={activeHighlight} />
-            </button>
-            <a className="instagram-highlight-link" href={site.instagram} target="_blank" rel="noopener noreferrer">
-              More highlights on Instagram
-            </a>
-          </article>
-
-          {highlights.length > 1 && (
-            <div className="highlight-dots" aria-label="Choose highlight">
-              {highlights.map((item, index) => (
-                <button
-                  key={item._id || item.cloudinaryUrl}
-                  type="button"
-                  className={index === highlightIndex ? 'active' : ''}
-                  onClick={() => setHighlightIndex(index)}
-                  aria-label={`Show highlight ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="reviews-showcase-block">
-          <div className="review-cards-row">
-            <ReviewCard review={activeReview} label="What our clients say" />
-            <ReviewCard review={nextReview} label="Google reviews" compact />
+        {averageRating && (
+          <div className="rating-summary">
+            <strong>{averageRating}</strong>
+            <span>★ ★ ★ ★ ★</span>
+            <small>Average of {reviews.length} client reviews</small>
           </div>
-
-          {visibleReviews.length > 1 && (
-            <div className="review-dots" aria-label="Choose testimonial">
-              {visibleReviews.map((review, index) => (
-                <button
-                  key={review._id}
-                  type="button"
-                  className={index === activeIndex ? 'active' : ''}
-                  onClick={() => setActiveIndex(index)}
-                  aria-label={`Show testimonial ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
+
+      <div className="review-cards-row" aria-label="Customer testimonials">
+        {activeReview && <ReviewCard review={activeReview} label="What our clients say" />}
+        {nextReview && <ReviewCard review={nextReview} label="Client experience" compact />}
+      </div>
+
+      {visibleReviews.length > 1 && (
+        <div className="review-dots" aria-label="Choose testimonial">
+          {visibleReviews.map((review, index) => (
+            <button
+              key={review._id}
+              type="button"
+              className={index === activeIndex ? 'active' : ''}
+              onClick={() => setActiveIndex(index)}
+              aria-label={`Show testimonial ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
 
       <form className="review-form" onSubmit={submitReview}>
         <div>
@@ -359,47 +214,6 @@ export default function TestimonialsPanel() {
         </button>
         {message && <p className="review-message">{message}</p>}
       </form>
-
-      {modalOpen && (
-        <div className="highlight-modal" role="dialog" aria-modal="true" aria-label="Event highlights">
-          <button type="button" className="highlight-modal-backdrop" onClick={() => setModalOpen(false)} aria-label="Close highlights" />
-          <div className="highlight-modal-panel">
-            <div className="highlight-modal-head">
-              <div>
-                <p className="eyebrow">Event highlights</p>
-                <h3>{getMediaTitle(activeHighlight)}</h3>
-              </div>
-              <button type="button" className="modal-close" onClick={() => setModalOpen(false)} aria-label="Close highlights">Close</button>
-            </div>
-
-            <div className="highlight-modal-media">
-              <ModalMedia highlight={activeHighlight} />
-              {highlights.length > 1 && (
-                <>
-                  <button type="button" className="modal-arrow prev" onClick={showPreviousHighlight} aria-label="Previous highlight">Prev</button>
-                  <button type="button" className="modal-arrow next" onClick={showNextHighlight} aria-label="Next highlight">Next</button>
-                </>
-              )}
-            </div>
-
-            {highlights.length > 1 && (
-              <div className="highlight-thumbs" aria-label="Highlight thumbnails">
-                {highlights.map((item, index) => (
-                  <button
-                    key={item._id || item.cloudinaryUrl}
-                    type="button"
-                    className={index === highlightIndex ? 'active' : ''}
-                    onClick={() => setHighlightIndex(index)}
-                    aria-label={`Open highlight ${index + 1}`}
-                  >
-                    <img src={getPreviewSrc(item)} alt="" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

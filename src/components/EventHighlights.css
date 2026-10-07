@@ -1,0 +1,309 @@
+.eh-card {
+  max-width: 900px;
+  margin: 40px auto 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(38, 23, 15, 0.08);
+  overflow: hidden;
+}
+
+.eh-card-cta {
+  display: block;
+  border-top: 1px solid rgba(217, 173, 82, 0.28);
+  background: #fffaf1;
+  color: var(--maroon);
+  padding: 13px 18px;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.eh-row {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 24px 20px 18px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.eh-row::-webkit-scrollbar {
+  display: none;
+}
+
+.eh-bubble {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 84px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  scroll-snap-align: start;
+}
+
+.eh-ring {
+  display: block;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--gold), var(--maroon) 68%, var(--maroon-dark));
+  transition: transform 160ms ease;
+}
+
+.eh-bubble:hover .eh-ring,
+.eh-bubble:focus-visible .eh-ring {
+  transform: scale(1.05);
+}
+
+.eh-ring-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.eh-ring-inner img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.eh-play-badge {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(10, 7, 5, 0.5);
+}
+
+.eh-play-badge::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 5px 0 5px 8px;
+  border-color: transparent transparent transparent #fff;
+}
+
+.eh-bubble-label {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* Full-screen story viewer */
+
+.eh-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: stretch;
+  background: #080605;
+}
+
+.eh-viewer-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  background: #080605;
+}
+
+.eh-viewer-progress {
+  display: flex;
+  gap: 4px;
+  padding: 10px 10px 0;
+}
+
+.eh-progress-track {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+}
+
+.eh-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--gold);
+}
+
+.eh-progress-animating {
+  animation-name: eh-story-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes eh-story-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+.eh-viewer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  color: #fff;
+}
+
+.eh-viewer-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.eh-viewer-brand img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.eh-viewer-brand strong {
+  font-size: 0.84rem;
+}
+
+.eh-viewer-brand span {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.eh-viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.eh-icon-button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.eh-icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.eh-viewer-stage {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  background: #000;
+}
+
+.eh-viewer-media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.eh-tap-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 35%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.eh-tap-prev { left: 0; }
+.eh-tap-next { right: 0; }
+
+.eh-viewer-cta {
+  display: block;
+  border-top: 1px solid rgba(217, 173, 82, 0.24);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  padding: 15px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .eh-viewer {
+    place-items: center;
+    background: rgba(8, 6, 5, 0.92);
+  }
+
+  .eh-viewer-panel {
+    width: min(420px, 92vw);
+    height: min(780px, 92vh);
+    border: 1px solid rgba(217, 173, 82, 0.3);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (max-width: 620px) {
+  .eh-card {
+    margin-top: 28px;
+    border-radius: 4px;
+  }
+
+  .eh-row {
+    gap: 16px;
+    padding: 20px 14px 14px;
+  }
+
+  .eh-bubble {
+    width: 76px;
+  }
+
+  .eh-ring {
+    width: 68px;
+    height: 68px;
+  }
+}

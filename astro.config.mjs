@@ -4,7 +4,7 @@ import react from '@astrojs/react';
 export default defineConfig({
   integrations: [react()],
   output: 'static',
-  site: process.env.PUBLIC_SITE_URL || 'https://chinmayi-events.netlify.app',
+  site: process.env.PUBLIC_SITE_URL || 'https://chinmayi-events.vercel.app',
   vite: {
     server: {
       proxy: {

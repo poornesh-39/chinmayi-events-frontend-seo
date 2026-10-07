@@ -9,17 +9,69 @@ export const site = {
   contactPerson: 'Kishor',
   email: 'chinmayievents99@gmail.com',
   address:
-    'Chandrakatte, Behind Shanimahathma Temple, Kempanahalli, Chikkamagaluru-577101',
+    'Chandrakatte, Behind Shanimahathma Temple, Kempanahalli, Chikkamagaluru, Karnataka 577101',
+  streetAddress: 'Chandrakatte, Behind Shanimahathma Temple, Kempanahalli',
+  postalCode: '577101',
   locality: 'Chikkamagaluru',
   region: 'Karnataka',
   country: 'IN',
   instagram: 'https://www.instagram.com/chinmayi_events/',
-  mapUrl:
-    'https://www.google.com/maps/search/?api=1&query=Chandrakatte%2C%20Behind%20Shanimahathma%20Temple%2C%20Kempanahalli%2C%20Chikkamagaluru%20577101',
   logo: '/images/chinmayi-events-logo.jpeg',
-  heroImage: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
-  ogImage: '/images/chikkamagaluru-wedding-stage-decoration.jpg'
+  heroImage: '/images/chikkamagaluru-floral-vase-arrangement-decor.jpg',
+  ogImage: '/images/chikkamagaluru-wedding-hall-floral-stage.jpeg',
+
+  /**
+   * Pin coordinates for the "Chinmayi Events" Google Business Profile listing,
+   * taken from the place URL that googleMapsUrl resolves to.
+   */
+  geo: { latitude: 13.3433058, longitude: 75.7754861 },
+
+  /**
+   * Canonical Google Business Profile place link. Feeds `hasMap` and `sameAs`,
+   * which is how Google ties this site to the map listing, and every
+   * "view on maps" link on the site.
+   */
+  googleMapsUrl: 'https://maps.app.goo.gl/6yAio4pVVEKuG7vn8',
+
+  /** Extra verified profiles for `sameAs` (Facebook, JustDial, YouTube…). */
+  otherProfiles: [],
+
+  openingHoursLabel: 'Mon - Sun: 9:00 AM - 8:00 PM',
+  openingHours: {
+    days: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ],
+    opens: '09:00',
+    closes: '20:00'
+  },
+
+  /** schema.org expects a currency-symbol band here, not a sentence. */
+  priceRange: '₹₹'
 };
+
+/**
+ * Towns the team actually travels to. Drives `areaServed` in the schema and
+ * the footer coverage line, so trim anything that is not genuinely served —
+ * claiming coverage you do not deliver hurts more than it helps.
+ */
+export const areasServed = [
+  'Chikkamagaluru',
+  'Kempanahalli',
+  'Aldur',
+  'Mudigere',
+  'Birur',
+  'Kadur',
+  'Tarikere',
+  'Sringeri',
+  'Koppa',
+  'Narasimharajapura'
+];
 
 export const whatsappNumber =
   import.meta.env.PUBLIC_WHATSAPP_NUMBER || '919380350678';
@@ -30,11 +82,19 @@ export const apiUrl =
   directApiUrl || '';
 
 export const siteUrl =
-  import.meta.env.PUBLIC_SITE_URL || 'https://chinmayi-events.netlify.app';
+  import.meta.env.PUBLIC_SITE_URL || 'https://chinmayi-events.vercel.app';
 
 export const whatsappHref = (message =
   'Hi Chinmayi Events, I would like to inquire about event decoration in Chikkamagaluru.') =>
   `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+/** Turn-by-turn directions to the verified map pin. */
+export const directionsHref = () =>
+  `https://www.google.com/maps/dir/?api=1&destination=${site.geo.latitude}%2C${site.geo.longitude}`;
+
+/** Keyless Google Maps embed centred on the verified pin. */
+export const mapEmbedSrc = () =>
+  `https://maps.google.com/maps?q=${site.geo.latitude},${site.geo.longitude}&z=15&hl=en&output=embed`;
 
 export const gmailHref = (subject = 'Event decoration enquiry') =>
   `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}&su=${encodeURIComponent(subject)}`;
@@ -53,6 +113,7 @@ export const eventTypes = [
   ['vehicle', 'Vehicle Decoration'],
   ['birthday', 'Birthday'],
   ['naming-ceremony', 'Naming Ceremony'],
+  ['baby-shower', 'Baby Shower'],
   ['corporate', 'Corporate'],
   ['other', 'Other']
 ];
@@ -93,7 +154,7 @@ export const services = [
     shortTitle: 'Wedding Decoration',
     description:
       'Elegant mandap, entrance, floral, seating and complete wedding venue decoration for families in and around Chikkamagaluru.',
-    image: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
+    image: '/images/chikkamagaluru-wedding-hall-floral-stage.jpeg',
     keywords:
       'wedding decoration Chikkamagaluru, mandap decoration Chikkamagaluru, wedding decorators near me',
     highlights: [
@@ -123,7 +184,7 @@ export const services = [
     shortTitle: 'Birthday Decor',
     description:
       'Colorful birthday setups, cake table styling, balloon decor, kids themes and family celebration decoration.',
-    image: '/images/chikkamagaluru-birthday-cake-table-decoration.jpg',
+    image: '/images/chikkamagaluru-birthday-balloon-arch-backdrop.jpeg',
     keywords:
       'birthday decoration Chikkamagaluru, birthday decorators near me, cake table decoration',
     highlights: [
@@ -138,7 +199,7 @@ export const services = [
     shortTitle: 'Engagement Decor',
     description:
       'Elegant engagement, ring ceremony and pre-wedding decor with floral stages, backdrops and intimate styling.',
-    image: '/images/chikkamagaluru-engagement-decoration.jpeg',
+    image: '/images/chikkamagaluru-reception-stage-floral-backdrop.jpeg',
     keywords:
       'engagement decoration Chikkamagaluru, ring ceremony decoration Chikkamagaluru',
     highlights: [
@@ -163,6 +224,111 @@ export const services = [
     ]
   },
   {
+    slug: 'event-management-chikkamagaluru',
+    title: 'Event Management and Decoration in Chikkamagaluru',
+    shortTitle: 'Event Management',
+    description:
+      'End-to-end event setup in Chikkamagaluru: decoration design, stage and seating, shamiyana, lighting and on-day setup coordination for weddings, family functions and corporate events.',
+    image: '/images/chikkamagaluru-outdoor-tent-carpet-aisle-setup.jpeg',
+    keywords:
+      'event management Chikkamagaluru, event organisers Chikkamagaluru, event planners near me, event management near me',
+    highlights: [
+      'Single point of contact from planning to setup day',
+      'Decoration, stage, seating, shamiyana and lighting handled together',
+      'Venue walkthrough, timeline and material planning before the date'
+    ]
+  },
+  {
+    slug: 'haldi-decoration-chikkamagaluru',
+    title: 'Haldi and Pre-Wedding Decoration in Chikkamagaluru',
+    shortTitle: 'Haldi Decor',
+    description:
+      'Bright marigold and floral haldi setups, seating, backdrops and photo corners for pre-wedding ceremonies at home or at the venue.',
+    image: '/images/chikkamagaluru-haldi-marigold-backdrop-urli.jpeg',
+    keywords:
+      'haldi decoration Chikkamagaluru, pre wedding decoration Chikkamagaluru, haldi decorators near me',
+    highlights: [
+      'Marigold, floral and traditional haldi themes',
+      'Seating, backdrop and photo corner styling',
+      'Compact setups that fit home courtyards and terraces'
+    ]
+  },
+  {
+    slug: 'naming-ceremony-decoration-chikkamagaluru',
+    title: 'Naming Ceremony Decoration in Chikkamagaluru',
+    shortTitle: 'Naming Ceremony',
+    description:
+      'Warm, traditional naming ceremony and cradle ceremony decoration with floral backdrops, cradle styling and soft colour themes.',
+    image: '/images/chikkamagaluru-naming-ceremony-stage-decoration.jpeg',
+    keywords:
+      'naming ceremony decoration Chikkamagaluru, cradle ceremony decoration, namakarana decoration Chikkamagaluru',
+    highlights: [
+      'Cradle, backdrop and welcome area styling',
+      'Traditional colour and floral combinations',
+      'Gentle setups suited to small family gatherings'
+    ]
+  },
+  {
+    slug: 'housewarming-decoration-chikkamagaluru',
+    title: 'Housewarming Decoration in Chikkamagaluru',
+    shortTitle: 'Housewarming',
+    description:
+      'Griha pravesha and housewarming decoration with entrance work, floral arrangements, rangoli-friendly layouts and pooja area styling.',
+    image: '/images/chikkamagaluru-home-function-hanging-floral-backdrop.jpeg',
+    keywords:
+      'housewarming decoration Chikkamagaluru, griha pravesha decoration Chikkamagaluru, house warming decorators near me',
+    highlights: [
+      'Main entrance and doorway floral decoration',
+      'Pooja area and hall arrangement',
+      'Setups sized for new homes and apartments'
+    ]
+  },
+  {
+    slug: 'outdoor-event-decoration-chikkamagaluru',
+    title: 'Outdoor Event Decoration in Chikkamagaluru',
+    shortTitle: 'Outdoor Events',
+    description:
+      'Lawn, garden, estate and open-ground event decoration with weather-aware staging, lighting and guest seating for outdoor celebrations.',
+    image: '/images/chikkamagaluru-outdoor-floral-entrance-arch.jpeg',
+    keywords:
+      'outdoor event decoration Chikkamagaluru, lawn wedding decoration Chikkamagaluru, garden event decorators',
+    highlights: [
+      'Open-air stage, canopy and pathway decoration',
+      'Evening lighting planned for outdoor venues',
+      'Layouts that account for ground, weather and guest movement'
+    ]
+  },
+  {
+    slug: 'corporate-event-decoration-chikkamagaluru',
+    title: 'Corporate Event Decoration in Chikkamagaluru',
+    shortTitle: 'Corporate Events',
+    description:
+      'Clean, professional decoration for corporate functions, inaugurations, annual days and office celebrations, with stage, backdrop and lighting setup.',
+    image: '/images/chikkamagaluru-event-centerpiece-decoration.avif',
+    keywords:
+      'corporate event decoration Chikkamagaluru, office event decorators Chikkamagaluru, inauguration decoration',
+    highlights: [
+      'Stage, podium and branded backdrop setup',
+      'Inaugurations, annual days and office functions',
+      'Restrained styling that suits a professional audience'
+    ]
+  },
+  {
+    slug: 'vehicle-decoration-chikkamagaluru',
+    title: 'Vehicle Decoration in Chikkamagaluru',
+    shortTitle: 'Vehicle Decor',
+    description:
+      'Floral car and vehicle decoration for weddings, receptions, bride and groom entries, and temple or procession occasions.',
+    image: '/images/chikkamagaluru-flower-theme-decoration.jpg',
+    keywords:
+      'vehicle decoration Chikkamagaluru, wedding car decoration Chikkamagaluru, car flower decoration near me',
+    highlights: [
+      'Fresh floral car decoration for wedding entries',
+      'Colour matched to the main event theme',
+      'Setup timed to the departure schedule'
+    ]
+  },
+  {
     slug: 'shamiyana-chair-carpet-pakkoda-chikkamagaluru',
     title: 'Shamiyana, Chair, Carpet and Pakkoda Setup in Chikkamagaluru',
     shortTitle: 'Shamiyana Setup',
@@ -181,8 +347,8 @@ export const services = [
 
 export const galleryHighlights = [
   {
-    src: '/images/chikkamagaluru-wedding-stage-decoration.jpg',
-    alt: 'Wedding stage decoration by Chinmayi Events in Chikkamagaluru',
+    src: '/images/chikkamagaluru-wedding-hall-floral-stage.jpeg',
+    alt: 'Wedding hall stage with a full floral wall by Chinmayi Events in Chikkamagaluru',
     title: 'Wedding Stage'
   },
   {
@@ -201,14 +367,14 @@ export const galleryHighlights = [
     title: 'Guest Setup'
   },
   {
-    src: '/images/chikkamagaluru-birthday-cake-table-decoration.jpg',
-    alt: 'Birthday cake table decoration in Chikkamagaluru',
+    src: '/images/chikkamagaluru-birthday-balloon-arch-backdrop.jpeg',
+    alt: 'Birthday balloon arch backdrop with a cake pedestal in Chikkamagaluru',
     title: 'Birthday Decor'
   },
   {
-    src: '/images/chikkamagaluru-custom-event-design.jpeg',
-    alt: 'Custom event design and decoration by Chinmayi Events',
-    title: 'Custom Design'
+    src: '/images/chikkamagaluru-naming-ceremony-stage-decoration.jpeg',
+    alt: 'Naming ceremony stage decoration by Chinmayi Events',
+    title: 'Naming Ceremony'
   }
 ];
 

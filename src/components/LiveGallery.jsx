@@ -8,17 +8,23 @@ import {
   normalizeCategory
 } from '../data/site.js';
 
-export default function LiveGallery() {
-  const [items, setItems] = useState([]);
-  const [state, setState] = useState('loading');
+/**
+ * `initialItems` is fetched at build time in gallery.astro so the static HTML
+ * already contains every photo. Without it a crawler only ever sees the
+ * loading placeholder. The mount-time fetch below still runs, so a visitor
+ * gets anything uploaded since the last deploy.
+ *
+ * @param {{ initialItems?: any[] }} props
+ */
+export default function LiveGallery({ initialItems = [] }) {
+  const [items, setItems] = useState(initialItems);
+  const [state, setState] = useState(initialItems.length > 0 ? 'ready' : 'loading');
   const [activeCategory, setActiveCategory] = useState('all');
 
   useEffect(() => {
     const controller = new AbortController();
 
-    // TODO: switch to a dedicated public endpoint once the backend adds one —
-    // this admin route should not be readable without auth.
-    fetch(`${apiUrl}/api/gallery/admin/all`, { signal: controller.signal })
+    fetch(`${apiUrl}/api/gallery/all`, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) throw new Error(`Gallery unavailable (${response.status})`);
         return response.json();
@@ -40,11 +46,13 @@ export default function LiveGallery() {
       .catch((error) => {
         if (error.name === 'AbortError') return;
         console.error('Failed to load gallery:', error);
-        setState('error');
+        // Keep the build-time photos on screen rather than replacing a working
+        // gallery with an error message.
+        setState(initialItems.length > 0 ? 'ready' : 'error');
       });
 
     return () => controller.abort();
-  }, []);
+  }, [initialItems.length]);
 
   const categories = useMemo(() => {
     const uploadedCategories = [...new Set(items.map((item) => normalizeCategory(item.eventCategory)))];

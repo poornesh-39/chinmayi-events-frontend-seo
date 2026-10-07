@@ -2,7 +2,7 @@
 .admin-page {
   min-height: 72vh;
   background: var(--soft);
-  padding: 56px max(16px, calc((100vw - 1160px) / 2));
+  padding: 40px max(16px, calc((100vw - 1160px) / 2));
 }
 
 .admin-login,
@@ -68,8 +68,8 @@
   font-weight: 500;
 }
 
-.admin-login button,
-.admin-card button,
+.admin-login button:not(.password-toggle),
+.admin-card button:not(.password-toggle),
 .admin-tabs button {
   border: 0;
   border-radius: 8px;
@@ -80,8 +80,8 @@
   cursor: pointer;
 }
 
-.admin-login button:disabled,
-.admin-card button:disabled,
+.admin-login button:not(.password-toggle):disabled,
+.admin-card button:not(.password-toggle):disabled,
 .admin-tabs button:disabled {
   cursor: wait;
   opacity: 0.68;
@@ -179,10 +179,39 @@
   padding: 0 !important;
 }
 
+.media-preview-link {
+  display: block;
+}
+
 .media-grid img {
   width: 100%;
   aspect-ratio: 1.35;
   object-fit: cover;
+  cursor: zoom-in;
+}
+
+.media-play-badge {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(10, 7, 5, 0.45);
+  pointer-events: none;
+}
+
+.media-play-badge::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 9px 0 9px 15px;
+  border-color: transparent transparent transparent #fff;
 }
 
 .highlight-badge {
@@ -200,7 +229,43 @@
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
 }
 
-.media-grid div:not(.media-preview):not(.media-actions) {
+.media-icon-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+}
+
+.media-icon-actions button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0 !important;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+}
+
+.action-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.btn-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.media-grid div:not(.media-preview) {
   padding: 12px;
 }
 
@@ -210,23 +275,13 @@
 }
 
 .media-grid p {
-  margin-bottom: 10px;
+  margin: 0;
   color: var(--muted);
 }
 
-.media-actions {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: center;
-}
-
-.media-grid button {
-  padding: 9px 12px;
-}
-
 .highlight-btn {
-  background: #1f1a14 !important;
+  background: rgba(31, 26, 20, 0.82) !important;
+  color: #fff !important;
 }
 
 .highlight-btn.active {
@@ -235,7 +290,76 @@
 }
 
 .delete-btn {
-  background: #9c1d2a !important;
+  background: rgba(156, 29, 42, 0.86) !important;
+  color: #fff !important;
+}
+
+.media-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.media-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(10, 7, 5, 0.86);
+  cursor: pointer;
+}
+
+.media-lightbox-panel {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  max-height: 90vh;
+  display: grid;
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #120d0b;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+}
+
+.media-lightbox-panel img,
+.media-lightbox-panel video {
+  width: 100%;
+  max-height: 78vh;
+  background: #000;
+  object-fit: contain;
+}
+
+.media-lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+}
+
+.media-lightbox-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.media-lightbox-title {
+  margin: 0;
+  padding: 12px 14px;
+  background: #1a1310;
+  color: #fff8ec;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 @media (max-width: 920px) {
@@ -250,12 +374,8 @@
 }
 
 @media (max-width: 520px) {
-  .media-head,
-  .media-actions {
-    grid-template-columns: 1fr;
-  }
-
   .media-head {
+    grid-template-columns: 1fr;
     display: grid;
   }
 }
@@ -305,7 +425,7 @@
   .admin-shell,
   .admin-page {
     min-height: auto;
-    padding: 96px 12px 40px;
+    padding: 24px 12px 40px;
   }
 
   .admin-login,
@@ -332,8 +452,8 @@
     font-size: 16px;
   }
 
-  .admin-login button,
-  .admin-card button,
+  .admin-login button:not(.password-toggle),
+  .admin-card button:not(.password-toggle),
   .admin-tabs button,
   .quote-title-row button,
   .quote-search-row button,
@@ -397,21 +517,18 @@
     gap: 12px;
   }
 
-  .media-grid article {
-    display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
-    align-items: stretch;
-  }
-
   .media-grid img {
-    height: 100%;
-    min-height: 132px;
-    aspect-ratio: auto;
+    aspect-ratio: 1.1;
   }
 
-  .media-grid div:not(.media-preview):not(.media-actions) {
-    min-width: 0;
-    padding: 12px;
+  .media-icon-actions button {
+    width: 38px;
+    height: 38px;
+    min-height: 0;
+  }
+
+  .media-grid div:not(.media-preview) {
+    padding: 10px 12px;
   }
 
   .media-grid h3 {
@@ -421,19 +538,7 @@
   }
 
   .media-grid p {
-    margin-bottom: 8px;
     font-size: 0.84rem;
-  }
-
-  .media-actions {
-    grid-template-columns: 1fr;
-    gap: 7px;
-  }
-
-  .media-grid button {
-    min-height: 42px;
-    padding: 9px 10px;
-    font-size: 0.78rem;
   }
 
   .highlight-badge {
@@ -562,15 +667,250 @@
     padding-inline: 10px;
   }
 
-  .media-grid article {
-    grid-template-columns: 86px minmax(0, 1fr);
-  }
-
-  .media-grid img {
-    min-height: 148px;
-  }
-
   .quote-item-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---- Session controls ---------------------------------------------------- */
+
+.admin-whoami {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.admin-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-signout {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--maroon);
+  padding: 8px 14px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.admin-signout:hover {
+  border-color: var(--maroon);
+}
+
+/* ---- Enquiries ----------------------------------------------------------- */
+
+.leads-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.leads-head p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.leads-new-pill {
+  border-radius: 999px;
+  background: var(--maroon);
+  color: #fff8ec;
+  padding: 2px 9px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.leads-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.leads-filter select {
+  min-height: 40px;
+}
+
+.leads-empty {
+  color: var(--muted);
+  padding: 26px 0;
+  text-align: center;
+}
+
+.leads-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A left rule carries the pipeline stage, so status reads before any text. */
+.lead {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  padding: 14px 16px;
+  display: grid;
+  gap: 9px;
+}
+
+.lead-new { border-left-color: var(--maroon); background: #fffdf8; }
+.lead-contacted { border-left-color: var(--gold-dark); }
+.lead-quoted { border-left-color: #0d5f62; }
+.lead-won { border-left-color: #3f7d52; }
+.lead-lost { border-left-color: #b6b0a6; }
+
+.lead-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.lead-identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.lead-identity strong {
+  font-size: 1.02rem;
+}
+
+.lead-event {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 2px 7px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.lead-main time {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.lead-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.lead-contact a {
+  color: var(--maroon);
+  font-size: 0.87rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lead-message {
+  margin: 0;
+  border-left: 2px solid var(--line);
+  padding-left: 11px;
+  color: var(--muted);
+  font-size: 0.89rem;
+}
+
+.lead-status select {
+  min-height: 38px;
+  max-width: 190px;
+}
+
+.leads-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+@media (max-width: 620px) {
+  .admin-top-actions { width: 100%; justify-content: space-between; }
+  .leads-head { flex-direction: column; }
+  .leads-controls { width: 100%; }
+  .leads-filter { flex: 1; }
+  .lead-status select { max-width: none; width: 100%; }
+}
+
+/* ---- Password visibility toggle ------------------------------------------ */
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Room for the icon that sits inside the field's right edge. */
+.password-field input {
+  padding-right: 38px;
+}
+
+/* Edge renders its own reveal control; ours replaces it. */
+.password-field input::-ms-reveal,
+.password-field input::-ms-clear {
+  display: none;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  /* Centred against the input's own height rather than the flex line, so it
+     stays put if the field's padding or font size changes. */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  /* Pinned to its own size: blanket `button { width: 100% }` rules elsewhere
+     in this file would otherwise stretch it across the whole field. */
+  left: auto;
+  width: 16px;
+  height: 16px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 0;
+}
+
+.password-toggle:hover {
+  color: var(--maroon);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.password-toggle svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
