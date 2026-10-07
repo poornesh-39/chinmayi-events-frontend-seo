@@ -81,6 +81,23 @@ export default function LeadsPanel({ onAuthError }) {
     }
   };
 
+  const deleteLead = async (lead) => {
+    if (!confirm(`Delete the enquiry from ${lead.name}? This cannot be undone.`)) return;
+
+    try {
+      const response = await authFetch(`/api/contact/${lead._id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Delete failed');
+
+      // Reload so the counts and pagination stay right; step back a page if
+      // this was the last enquiry on it.
+      if (leads.length === 1 && page > 1) setPage(page - 1);
+      else await load();
+      setStatus('Enquiry deleted.');
+    } catch (error) {
+      if (!onAuthError?.(error)) setStatus('Could not delete that enquiry.');
+    }
+  };
+
   return (
     <div className="admin-card leads-card">
       <div className="leads-head">
@@ -148,14 +165,19 @@ export default function LeadsPanel({ onAuthError }) {
 
             {lead.message && <p className="lead-message">{lead.message}</p>}
 
-            <label className="lead-status">
-              <span className="sr-only">Status for {lead.name}</span>
-              <select value={lead.status} onChange={(event) => changeStatus(lead._id, event.target.value)}>
-                {STATUSES.map((value) => (
-                  <option key={value} value={value}>{STATUS_LABELS[value]}</option>
-                ))}
-              </select>
-            </label>
+            <div className="lead-actions">
+              <label className="lead-status">
+                <span className="sr-only">Status for {lead.name}</span>
+                <select value={lead.status} onChange={(event) => changeStatus(lead._id, event.target.value)}>
+                  {STATUSES.map((value) => (
+                    <option key={value} value={value}>{STATUS_LABELS[value]}</option>
+                  ))}
+                </select>
+              </label>
+              <button type="button" className="lead-delete" onClick={() => deleteLead(lead)} disabled={loading}>
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
